@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pokémon Daily Tournament</title>
+
+<style>
+body {
+    margin: 0;
+    background: #1e293b;
+    font-family: 'Courier New', Courier, monospace; /* Fonte mais retro */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+#battle {
+    width: 100%;
+    max-width: 480px;
+    background: #f8fafc;
+    border: 4px solid #475569;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+#arena {
+    height: 250px;
+    background: linear-gradient(to bottom, #93c5fd 0%, #e0f2fe 60%, #a3e635 60%, #4ade80 100%);
+    position: relative;
+    border-bottom: 4px solid #475569;
+}
+
+.pokemon {
+    position: absolute;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+#player { bottom: 20px; left: 30px; }
+#enemy { top: 20px; right: 30px; }
+
+.sprite {
+    width: 110px;
+    image-rendering: pixelated;
+}
+
+.hpbox {
+    background: #fffaed;
+    color: #1e293b;
+    font-weight: bold;
+    padding: 6px 10px;
+    border: 3px solid #334155;
+    border-radius: 8px 8px 8px 0;
+    margin-bottom: 5px;
+    text-align: left;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+#player .hpbox { border-radius: 8px 8px 0 8px; }
+
+.hpbar-container {
+    width: 100%;
+    background: #334155;
+    padding: 2px;
+    border-radius: 10px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+.hpbar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.hp {
+    height: 100%;
+    background: #22c55e; /* Começa verde */
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+#textbox {
+    background: #fff;
+    color: #1e293b;
+    padding: 15px;
+    height: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 4px solid #475569;
+    display: flex;
+    align-items: center;
+}
+
+#moves {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #e2e8f0;
+    gap: 2px;
+    padding: 2px;
+}
+
+button {
+    padding: 15px;
+    border: 2px solid #94a3b8;
+    background: #fff;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+button:hover { background: #f1f5f9; border-color: #3b82f6; }
+button:disabled { background: #cbd5e1; cursor: not-allowed; color: #64748b; }
+
+#tournament {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #cbd5e1;
+}
+
+/* Animação de Dano */
+@keyframes blink {
+    0% { opacity: 1; filter: brightness(1); }
+    50% { opacity: 0; filter: brightness(10); }
+    100% { opacity: 1; filter: brightness(1); }
+}
+.hit-anim { animation: blink 0.2s 3; }
+.faint-anim { transform: translateY(50px); opacity: 0; transition: all 0.5s; }
+
+</style>
+</head>
+<body>
+
+<h2>🏆 Torneio Pokémon Diário</h2>
+
+<div id="battle">
+    <div id="arena">
+        <div id="player" class="pokemon">
+            <div class="hpbox">
+                <span id="p1name">???</span>
+                <div class="hpbar-container"><div class="hpbar"><div id="hp1" class="hp"></div></div></div>
+            </div>
+            <img id="sprite1" class="sprite">
+        </div>
+
+        <div id="enemy" class="pokemon">
+            <div class="hpbox">
+                <span id="p2name">???</span>
+                <div class="hpbar-container"><div class="hpbar"><div id="hp2" class="hp"></div></div></div>
+            </div>
+            <img id="sprite2" class="sprite">
+        </div>
+    </div>
+
+    <div id="textbox">Carregando batalha...</div>
+    <div id="moves"></div>
+</div>
+
+<div id="tournament"></div>
+
+<script>
+let p1, p2;
+let playerTurn = false; // Começa falso até carregar
+let battleNumber = 1;
+
+// Utilitário para pausar a execução (ritmo da batalha)
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+const types = {
+    normal:{rock:.5,ghost:0,steel:.5},
+    fire:{fire:.5,water:.5,grass:2,ice:2,bug:2,rock:.5,dragon:.5,steel:2},
+    water:{fire:2,water:.5,grass:.5,ground:2,rock:2,dragon:.5},
+    grass:{fire:.5,water:2,grass:.5,ground:2,rock:2,dragon:.5},
+    electric:{water:2,electric:.5,grass:.5,ground:0,flying:2,dragon:.5},
+    ice:{grass:2,ground:2,flying:2,dragon:2},
+    fighting:{normal:2,rock:2,steel:2,ice:2,dark:2,ghost:0},
+    ground:{fire:2,electric:2,grass:.5,poison:2,flying:0,rock:2,steel:2},
+    flying:{grass:2,fighting:2,bug:2,rock:.5,steel:.5},
+    psychic:{fighting:2,poison:2,steel:.5,dark:0},
+    bug:{grass:2,psychic:2,dark:2,fire:.5,fighting:.5},
+    rock:{fire:2,ice:2,flying:2,bug:2},
+    ghost:{psychic:2,ghost:2,normal:0},
+    dragon:{dragon:2,steel:.5},
+    dark:{psychic:2,ghost:2},
+    steel:{rock:2,ice:2,fire:.5,water:.5,electric:.5}
+};
+
+async function log(t) {
+    document.getElementById("textbox").innerText = t;
+    await sleep(1500); // Pausa para leitura
+}
+
+function typeEffect(a, b) { return types[a]?.[b] || 1; }
+
+async function getPokemon(id) {
+    let r = await fetch("https://pokeapi.co/api/v2/pokemon/" + id);
+    let d = await r.json();
+    let moves = [];
+
+    // Pegar atributos reais (HP e Speed)
+    let hpStat = d.stats.find(s => s.stat.name === 'hp').base_stat * 2;
+    let speedStat = d.stats.find(s => s.stat.name === 'speed').base_stat;
+
+    for(let i=0; i<4; i++){
+        let m = d.moves[Math.floor(Math.random()*d.moves.length)].move;
+        let md = await fetch(m.url).then(r => r.json());
+        moves.push({
+            name: capitalize(md.name.replace('-', ' ')),
+            power: md.power || 0,
+            accuracy: md.accuracy || 100,
+            type: md.type.name,
+            damage: md.power != null,
+            effect: md.meta?.ailment?.name
+        });
+    }
+
+    return {
+        name: capitalize(d.name),
+        type: d.types[0].type.name,
+        hp: hpStat,
+        maxHp: hpStat,
+        speed: speedStat,
+        spriteFront: "https://play.pokemonshowdown.com/sprites/ani/" + d.name + ".gif",
+        spriteBack: "https://play.pokemonshowdown.com/sprites/ani-back/" + d.name + ".gif",
+        cry: "https://play.pokemonshowdown.com/audio/cries/" + d.name + ".mp3",
+        moves: moves,
+        status: null,
+        imgId: null // Será definido depois
+    };
+}
+
+function updateHP() {
+    [p1, p2].forEach((p, idx) => {
+        let pct = (p.hp / p.maxHp) * 100;
+        if(pct < 0) pct = 0;
+        
+        let hpEl = document.getElementById("hp" + (idx + 1));
+        hpEl.style.width = pct + "%";
+
+        // Cores clássicas de HP
+        if(pct > 50) hpEl.style.background = "#22c55e"; // Verde
+        else if(pct > 20) hpEl.style.background = "#eab308"; // Amarelo
+        else hpEl.style.background = "#ef4444"; // Vermelho
+    });
+}
+
+async function executeMove(attacker, defender, move) {
+    if (attacker.hp <= 0) return; // Se morreu, não ataca
+
+    await log(`${attacker.name} usou ${move.name}!`);
+
+    if (Math.random() * 100 > move.accuracy) {
+        await log("O ataque errou!");
+        return;
+    }
+
+    try { new Audio(attacker.cry).play(); } catch(e){}
+
+    if (move.damage && move.power > 0) {
+        // Animação de hit
+        document.getElementById(defender.imgId).classList.add("hit-anim");
+        setTimeout(() => document.getElementById(defender.imgId).classList.remove("hit-anim"), 600);
+
+        let stab = attacker.type == move.type ? 1.5 : 1;
+        let effectiveness = typeEffect(move.type, defender.type);
+        
+        // Fórmula de dano simplificada mas baseada em atributos reais
+        let dmg = Math.floor((move.power * stab * effectiveness) / 2.5);
+        if(dmg < 1) dmg = 1;
+
+        defender.hp -= dmg;
+        updateHP();
+
+        if (effectiveness > 1) await log("Foi super efetivo!");
+        if (effectiveness < 1) await log("Não foi muito efetivo...");
+
+    } else if (move.effect && move.effect !== "none") {
+        defender.status = move.effect;
+        await log(`${defender.name} sofreu ${move.effect}!`);
+    }
+}
+
+function enemyAI() {
+    let damageMoves = p2.moves.filter(m => m.damage && m.power > 0);
+    if (damageMoves.length) {
+        let best = damageMoves[0];
+        let score = 0;
+        damageMoves.forEach(m => {
+            let s = m.power * typeEffect(m.type, p1.type);
+            if(s > score) { score = s; best = m; }
+        });
+        return best;
+    }
+    return p2.moves[0];
+}
+
+function toggleButtons(state) {
+    const btns = document.querySelectorAll("#moves button");
+    btns.forEach(b => b.disabled = !state);
+}
+
+async function playTurn(moveIndex) {
+    if (!playerTurn) return;
+    playerTurn = false;
+    toggleButtons(false);
+
+    let pMove = p1.moves[moveIndex];
+    let eMove = enemyAI();
+
+    // Calcula velocidade para ver quem ataca primeiro
+    let first = p1.speed >= p2.speed ? p1 : p2;
+    let second = p1.speed >= p2.speed ? p2 : p1;
+    let firstMove = p1.speed >= p2.speed ? pMove : eMove;
+    let secondMove = p1.speed >= p2.speed ? eMove : pMove;
+
+    await executeMove(first, second, firstMove);
+    
+    if (second.hp > 0) {
+        await executeMove(second, first, secondMove);
+    }
+
+    // Checar quem desmaiou (fainted)
+    if (p1.hp <= 0) {
+        document.getElementById("sprite1").classList.add("faint-anim");
+        await log(`${p1.name} desmaiou!`);
+        loseBattle();
+        return;
+    }
+    
+    if (p2.hp <= 0) {
+        document.getElementById("sprite2").classList.add("faint-anim");
+        await log(`O ${p2.name} inimigo desmaiou!`);
+        winBattle();
+        return;
+    }
+
+    // Se ninguém morreu, volta para o jogador
+    await log("O que " + p1.name + " deve fazer?");
+    playerTurn = true;
+    toggleButtons(true);
+}
+
+function renderMoves() {
+    const movesDiv = document.getElementById("moves");
+    movesDiv.innerHTML = "";
+    p1.moves.forEach((m, i) => {
+        let b = document.createElement("button");
+        let icon = m.damage ? "⚔️" : "🔮";
+        b.innerText = `${m.name} ${icon}`;
+        b.onclick = () => playTurn(i);
+        b.disabled = true; // Habilita quando o turno iniciar
+        movesDiv.appendChild(b);
+    });
+}
+
+function updateTournament() {
+    let today = new Date().toDateString();
+    let data = JSON.parse(localStorage.getItem("tournament") || "{}");
+    let wins = data[today]?.wins || 0;
+    document.getElementById("tournament").innerText = "Vitórias hoje: " + wins + " / 3";
+}
+
+function saveTournament(win) {
+    let today = new Date().toDateString();
+    let data = JSON.parse(localStorage.getItem("tournament") || "{}");
+    if(!data[today]) data[today] = {wins: 0};
+    if(win) data[today].wins++;
+    localStorage.setItem("tournament", JSON.stringify(data));
+    updateTournament();
+}
+
+async function winBattle() {
+    saveTournament(true);
+    battleNumber++;
+    if(battleNumber <= 3){
+        await log("Preparando próxima batalha...");
+        setTimeout(start, 1000);
+    } else {
+        await log("Você venceu o Torneio Diário!");
+    }
+}
+
+async function loseBattle() {
+    saveTournament(false);
+    await log("Você perdeu o torneio. Tente novamente amanhã!");
+}
+
+async function start() {
+    document.getElementById("sprite1").classList.remove("faint-anim");
+    document.getElementById("sprite2").classList.remove("faint-anim");
+    document.getElementById("textbox").innerText = "Procurando oponente...";
+    
+    // Sorteia da geração 1 (1 a 151)
+    p1 = await getPokemon(Math.floor(Math.random() * 151) + 1);
+    p2 = await getPokemon(Math.floor(Math.random() * 151) + 1);
+
+    p1.imgId = "sprite1";
+    p2.imgId = "sprite2";
+
+    document.getElementById("p1name").innerText = p1.name;
+    document.getElementById("p2name").innerText = p2.name;
+
+    document.getElementById("sprite1").src = p1.spriteBack;
+    document.getElementById("sprite2").src = p2.spriteFront;
+
+    updateHP();
+    renderMoves();
+    updateTournament();
+
+    try { new Audio(p2.cry).play(); } catch(e){}
+    await log(`Um ${p2.name} selvagem apareceu!`);
+    await log(`Vai, ${p1.name}!`);
+    await log(`O que ${p1.name} deve fazer?`);
+    
+    playerTurn = true;
+    toggleButtons(true);
+}
+
+// Inicia o jogo
+start();
+</script>
+
+</body>
+</html>
