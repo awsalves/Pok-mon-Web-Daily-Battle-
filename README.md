@@ -1,1 +1,1 @@
-# Pok-mon-Web-Daily-Battle-
+# Pokémon Web Daily Battle
