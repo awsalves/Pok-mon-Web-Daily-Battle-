@@ -4,431 +4,1489 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pokémon Daily Tournament</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
 
 <style>
+:root {
+  --cream: #f5f0dc;
+  --dark: #1a1a2e;
+  --border: #3d3d5c;
+  --green-hp: #38d980;
+  --yellow-hp: #f5c518;
+  --red-hp: #f54242;
+  --btn-bg: #eae4cc;
+  --btn-border: #7b6f50;
+  --blue-accent: #4a9eff;
+  --purple-accent: #a855f7;
+  --gold: #f5c518;
+  --shadow: rgba(0,0,0,0.6);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    margin: 0;
-    background: #1e293b;
-    font-family: 'Courier New', Courier, monospace; /* Fonte mais retro */
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
+  background: #0d0d1a;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(74,158,255,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.05) 0%, transparent 50%);
+  font-family: 'Press Start 2P', monospace;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px 40px;
 }
 
-#battle {
-    width: 100%;
-    max-width: 480px;
-    background: #f8fafc;
-    border: 4px solid #475569;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+/* ─── HEADER ─── */
+#header {
+  text-align: center;
+  margin-bottom: 16px;
 }
 
+#header h1 {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(245,197,24,0.5), 2px 2px 0 #7a6010;
+  margin-bottom: 6px;
+}
+
+#header .subtitle {
+  font-size: 7px;
+  color: #6b7aa1;
+  letter-spacing: 3px;
+}
+
+/* ─── TOURNAMENT BAR ─── */
+#tournament-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.battle-pip {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #3d3d5c;
+  border-radius: 50%;
+  background: #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  transition: all 0.4s;
+  position: relative;
+}
+
+.battle-pip.won {
+  background: var(--gold);
+  border-color: #d4a800;
+  box-shadow: 0 0 12px rgba(245,197,24,0.6);
+}
+
+.battle-pip.lost {
+  background: var(--red-hp);
+  border-color: #c03030;
+}
+
+.battle-pip.current {
+  border-color: var(--blue-accent);
+  box-shadow: 0 0 10px rgba(74,158,255,0.5);
+  animation: pulse-pip 1.5s infinite;
+}
+
+@keyframes pulse-pip {
+  0%, 100% { box-shadow: 0 0 10px rgba(74,158,255,0.5); }
+  50% { box-shadow: 0 0 20px rgba(74,158,255,0.9); }
+}
+
+.battle-label {
+  font-size: 7px;
+  color: #6b7aa1;
+  margin: 0 4px;
+}
+
+/* ─── GAME BOY SHELL ─── */
+#gameboy {
+  width: 100%;
+  max-width: 440px;
+  background: #2a2a3e;
+  border: 3px solid #3d3d5c;
+  border-radius: 12px 12px 40px 12px;
+  box-shadow:
+    0 0 0 1px #1a1a2e,
+    0 20px 60px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─── SCREEN ─── */
+#screen {
+  background: #1a2634;
+  margin: 12px;
+  border-radius: 6px;
+  border: 3px solid #111;
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,0.5),
+    0 0 30px rgba(74,158,255,0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─── ARENA ─── */
 #arena {
-    height: 250px;
-    background: linear-gradient(to bottom, #93c5fd 0%, #e0f2fe 60%, #a3e635 60%, #4ade80 100%);
-    position: relative;
-    border-bottom: 4px solid #475569;
+  height: 220px;
+  position: relative;
+  background:
+    linear-gradient(180deg,
+      #1a3a5c 0%,
+      #2a5580 30%,
+      #3a6f9a 55%,
+      #4a8ab8 55%,
+      #5a9fd0 60%,
+      #6ab5e8 65%
+    );
+  overflow: hidden;
 }
 
-.pokemon {
-    position: absolute;
-    text-align: center;
-    transition: all 0.2s;
+/* Ground */
+#arena::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  height: 70px;
+  background: linear-gradient(180deg,
+    #2d5a1e 0%,
+    #3a7428 30%,
+    #4a8f35 60%,
+    #5aad42 100%
+  );
+  border-top: 3px solid #1f3d15;
 }
 
-#player { bottom: 20px; left: 30px; }
-#enemy { top: 20px; right: 30px; }
-
-.sprite {
-    width: 110px;
-    image-rendering: pixelated;
+/* Clouds */
+.cloud {
+  position: absolute;
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  animation: drift linear infinite;
 }
 
+@keyframes drift {
+  from { transform: translateX(-120px); }
+  to { transform: translateX(calc(100vw + 120px)); }
+}
+
+/* ─── POKEMON CONTAINERS ─── */
+.poke-wrap {
+  position: absolute;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+#wrap-enemy { top: 10px; right: 15px; text-align: right; }
+#wrap-player { bottom: 10px; left: 10px; z-index: 11; }
+
+/* ─── HP BOX (estilo DS) ─── */
 .hpbox {
-    background: #fffaed;
-    color: #1e293b;
-    font-weight: bold;
-    padding: 6px 10px;
-    border: 3px solid #334155;
-    border-radius: 8px 8px 8px 0;
-    margin-bottom: 5px;
-    text-align: left;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+  background: var(--cream);
+  color: #1a1a2e;
+  padding: 5px 8px 6px;
+  border: 2px solid #7b6f50;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+  min-width: 150px;
+  position: relative;
 }
 
-#player .hpbox { border-radius: 8px 8px 0 8px; }
+#wrap-enemy .hpbox { margin-bottom: 4px; }
+#wrap-player .hpbox { margin-top: 4px; }
 
-.hpbar-container {
-    width: 100%;
-    background: #334155;
-    padding: 2px;
-    border-radius: 10px;
-    margin-top: 5px;
-    box-sizing: border-box;
+.hpbox-name {
+  font-size: 7px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 6px;
 }
 
-.hpbar {
-    width: 100%;
-    height: 8px;
-    background: #e2e8f0;
-    border-radius: 5px;
-    overflow: hidden;
+.poke-name { letter-spacing: 0.5px; }
+
+.poke-type-badge {
+  font-size: 5px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  color: white;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
-.hp {
-    height: 100%;
-    background: #22c55e; /* Começa verde */
-    transition: width 0.3s ease, background-color 0.3s ease;
+.hp-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.hp-label { font-size: 6px; color: #5a5040; }
+
+.hp-numbers { font-size: 6px; color: #1a1a2e; }
+
+.hpbar-track {
+  background: #c8bfa8;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #a09070;
+}
+
+.hpbar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease, background 0.4s ease;
+  position: relative;
+}
+
+.hpbar-fill::after {
+  content: '';
+  position: absolute;
+  top: 1px; left: 2px; right: 2px;
+  height: 2px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 2px;
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-block;
+  font-size: 5px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.status-psn { background: #a855f7; color: white; }
+.status-brn { background: #f97316; color: white; }
+.status-par { background: #eab308; color: #1a1a2e; }
+.status-slp { background: #64748b; color: white; }
+.status-frz { background: #67e8f9; color: #0e7490; }
+
+/* ─── SPRITES ─── */
+.sprite {
+  image-rendering: pixelated;
+  display: block;
+  filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5));
+  transition: transform 0.3s ease, opacity 0.5s ease, filter 0.3s ease;
+}
+
+#sprite1 { width: 110px; }
+#sprite2 { width: 90px; }
+
+/* ─── TEXTBOX ─── */
+#textbox-wrap {
+  background: var(--cream);
+  border-top: 3px solid #7b6f50;
+  padding: 10px 14px;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+#textbox-wrap::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
 }
 
 #textbox {
-    background: #fff;
-    color: #1e293b;
-    padding: 15px;
-    height: 50px;
-    font-size: 16px;
-    font-weight: bold;
-    border-bottom: 4px solid #475569;
-    display: flex;
-    align-items: center;
+  font-size: 9px;
+  color: #1a1a2e;
+  line-height: 1.8;
+  font-family: 'Press Start 2P', monospace;
+  min-height: 36px;
+}
+
+/* Blinking cursor */
+#cursor {
+  display: inline-block;
+  width: 8px;
+  height: 10px;
+  background: #1a1a2e;
+  margin-left: 4px;
+  animation: blink-cursor 0.7s step-end infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ─── MOVES PANEL ─── */
+#moves-panel {
+  background: #1a1a2e;
+  border-top: 3px solid #111;
+  padding: 8px;
+}
+
+#moves-header {
+  font-size: 6px;
+  color: #4a9eff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  padding-left: 2px;
 }
 
 #moves {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: #e2e8f0;
-    gap: 2px;
-    padding: 2px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
 }
 
-button {
-    padding: 15px;
-    border: 2px solid #94a3b8;
-    background: #fff;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 4px;
-    text-transform: uppercase;
+.move-btn {
+  padding: 8px 6px;
+  border: 2px solid var(--btn-border);
+  background: var(--btn-bg);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  color: #1a1a2e;
+  transition: all 0.1s;
+  position: relative;
+  overflow: hidden;
+  line-height: 1.5;
 }
 
-button:hover { background: #f1f5f9; border-color: #3b82f6; }
-button:disabled { background: #cbd5e1; cursor: not-allowed; color: #64748b; }
-
-#tournament {
-    margin-top: 15px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #cbd5e1;
+.move-btn:hover:not(:disabled) {
+  background: #fff;
+  border-color: var(--blue-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(74,158,255,0.3);
 }
 
-/* Animação de Dano */
-@keyframes blink {
-    0% { opacity: 1; filter: brightness(1); }
-    50% { opacity: 0; filter: brightness(10); }
-    100% { opacity: 1; filter: brightness(1); }
+.move-btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
 }
-.hit-anim { animation: blink 0.2s 3; }
-.faint-anim { transform: translateY(50px); opacity: 0; transition: all 0.5s; }
 
+.move-btn:disabled {
+  background: #c8c0a8;
+  cursor: not-allowed;
+  color: #7a7060;
+  border-color: #a09080;
+}
+
+.move-btn .move-name { display: block; margin-bottom: 3px; }
+
+.move-meta {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.move-type-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.move-pp { font-size: 5px; color: #5a5040; }
+.move-power-label { font-size: 5px; color: #2a5580; }
+
+/* ─── TYPE COLORS ─── */
+.type-normal    { background: #a0a0a0; }
+.type-fire      { background: #f08030; }
+.type-water     { background: #6890f0; }
+.type-grass     { background: #78c850; }
+.type-electric  { background: #f8d030; }
+.type-ice       { background: #98d8d8; }
+.type-fighting  { background: #c03028; }
+.type-ground    { background: #e0c068; }
+.type-flying    { background: #a890f0; }
+.type-psychic   { background: #f85888; }
+.type-bug       { background: #a8b820; }
+.type-rock      { background: #b8a038; }
+.type-ghost     { background: #705898; }
+.type-dragon    { background: #7038f8; }
+.type-dark      { background: #705848; }
+.type-steel     { background: #b8b8d0; }
+.type-poison    { background: #a040a0; }
+.type-fairy     { background: #ee99ac; }
+
+/* ─── BOTTOM CONTROLS ─── */
+#bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px 10px;
+  background: #252538;
+  border-top: 2px solid #111;
+}
+
+.run-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  padding: 6px 10px;
+  background: #3d3d5c;
+  color: #94a3b8;
+  border: 2px solid #4d4d6c;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.run-btn:hover {
+  background: #4d4d6c;
+  color: #cbd5e1;
+}
+
+.dpad {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 1px;
+  width: 40px; height: 40px;
+  opacity: 0.3;
+}
+
+.dpad > div {
+  background: #3d3d5c;
+  border-radius: 2px;
+}
+
+.dpad > div:nth-child(2),
+.dpad > div:nth-child(4),
+.dpad > div:nth-child(6),
+.dpad > div:nth-child(8) {
+  background: #4d4d6c;
+}
+
+/* ─── BATTLE ANIMATIONS ─── */
+@keyframes shake-x {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+@keyframes flash-white {
+  0%, 100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
+  50%       { filter: drop-shadow(0 0 20px white) brightness(10); }
+}
+
+@keyframes faint-fall {
+  to { transform: translateY(60px); opacity: 0; }
+}
+
+@keyframes enter-slide-right {
+  from { transform: translateX(80px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes enter-slide-left {
+  from { transform: translateX(-80px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes bounce-in {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes attack-lunge-right {
+  0%   { transform: translateX(0); }
+  40%  { transform: translateX(30px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes attack-lunge-left {
+  0%   { transform: translateX(0); }
+  40%  { transform: translateX(-30px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes hit-flash {
+  0%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+  50%       { opacity: 0.3; }
+}
+
+@keyframes status-pulse {
+  0%, 100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
+  50%       { filter: drop-shadow(0 0 15px rgba(168,85,247,0.8)); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+.anim-enter-enemy  { animation: enter-slide-right 0.5s ease forwards; }
+.anim-enter-player { animation: enter-slide-left 0.5s ease forwards; }
+.anim-bounce       { animation: bounce-in 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.anim-hit          { animation: hit-flash 0.15s 3; }
+.anim-attack-p     { animation: attack-lunge-right 0.3s ease; }
+.anim-attack-e     { animation: attack-lunge-left 0.3s ease; }
+.anim-faint        { animation: faint-fall 0.5s ease forwards; }
+.anim-status       { animation: status-pulse 0.5s 4; }
+.anim-float        { animation: float 2s ease-in-out infinite; }
+
+/* ─── DAMAGE POPUP ─── */
+.dmg-popup {
+  position: absolute;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
+  pointer-events: none;
+  animation: dmg-float 1.2s ease forwards;
+  z-index: 50;
+}
+
+.dmg-popup.super { color: var(--gold); font-size: 13px; }
+.dmg-popup.not-very { color: #94a3b8; font-size: 8px; }
+.dmg-popup.heal { color: #38d980; }
+
+@keyframes dmg-float {
+  0%   { transform: translateY(0); opacity: 1; }
+  70%  { transform: translateY(-30px); opacity: 1; }
+  100% { transform: translateY(-45px); opacity: 0; }
+}
+
+/* ─── EFFECTIVENESS BANNER ─── */
+#effect-banner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 7px;
+  white-space: nowrap;
+  z-index: 100;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  border: 2px solid rgba(255,255,255,0.2);
+  pointer-events: none;
+}
+
+#effect-banner.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ─── LOADING ─── */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0d0d1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: opacity 0.5s;
+}
+
+.loading-ball {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ef4444 0%, #ef4444 50%, white 50%, white 53%, #1a1a2e 53%);
+  border: 3px solid #1a1a2e;
+  box-shadow: 0 0 30px rgba(239,68,68,0.5);
+  animation: spin-ball 1s linear infinite, pulse-ball 1s ease-in-out infinite;
+  position: relative;
+}
+
+.loading-ball::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #1a1a2e;
+}
+
+@keyframes spin-ball {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes pulse-ball {
+  0%, 100% { box-shadow: 0 0 30px rgba(239,68,68,0.5); }
+  50%       { box-shadow: 0 0 60px rgba(239,68,68,0.9); }
+}
+
+#loading-text {
+  margin-top: 16px;
+  font-size: 8px;
+  color: #6b7aa1;
+  letter-spacing: 2px;
+  animation: fade-text 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes fade-text {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
+/* ─── WIN/LOSE OVERLAY ─── */
+#result-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(2px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#result-overlay.show { display: flex; }
+
+#result-title {
+  font-size: 16px;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  animation: bounce-in 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+#result-sub {
+  font-size: 7px;
+  color: #cbd5e1;
+  text-align: center;
+  line-height: 2;
+}
+
+#result-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 10px 20px;
+  background: var(--gold);
+  color: #1a1a2e;
+  border: 3px solid #d4a800;
+  border-radius: 4px;
+  cursor: pointer;
+  animation: pulse-pip 1.5s infinite;
+  margin-top: 4px;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #3d3d5c; border-radius: 2px; }
 </style>
 </head>
 <body>
 
-<h2>🏆 Torneio Pokémon Diário</h2>
-
-<div id="battle">
-    <div id="arena">
-        <div id="player" class="pokemon">
-            <div class="hpbox">
-                <span id="p1name">???</span>
-                <div class="hpbar-container"><div class="hpbar"><div id="hp1" class="hp"></div></div></div>
-            </div>
-            <img id="sprite1" class="sprite">
-        </div>
-
-        <div id="enemy" class="pokemon">
-            <div class="hpbox">
-                <span id="p2name">???</span>
-                <div class="hpbar-container"><div class="hpbar"><div id="hp2" class="hp"></div></div></div>
-            </div>
-            <img id="sprite2" class="sprite">
-        </div>
-    </div>
-
-    <div id="textbox">Carregando batalha...</div>
-    <div id="moves"></div>
+<!-- Loading -->
+<div id="loading-overlay">
+  <div class="loading-ball"></div>
+  <div id="loading-text">CARREGANDO POKÉMON...</div>
 </div>
 
-<div id="tournament"></div>
+<!-- Header -->
+<div id="header">
+  <h1>🏆 TORNEIO DIÁRIO</h1>
+  <div class="subtitle">POKÉMON · GEN I · DAILY CHALLENGE</div>
+</div>
+
+<!-- Tournament progress -->
+<div id="tournament-bar">
+  <span class="battle-label">BATALHA</span>
+  <div class="battle-pip" id="pip1">1</div>
+  <div class="battle-pip" id="pip2">2</div>
+  <div class="battle-pip" id="pip3">3</div>
+</div>
+
+<!-- Game Boy Shell -->
+<div id="gameboy">
+  <div id="screen">
+
+    <!-- Arena -->
+    <div id="arena">
+      <div class="cloud" style="width:60px;height:16px;top:20px;animation-duration:18s;animation-delay:0s;opacity:.12"></div>
+      <div class="cloud" style="width:40px;height:12px;top:35px;animation-duration:25s;animation-delay:-10s;opacity:.08"></div>
+
+      <div id="effect-banner"></div>
+
+      <!-- Enemy -->
+      <div id="wrap-enemy" class="poke-wrap">
+        <div class="hpbox">
+          <div class="hpbox-name">
+            <span class="poke-name" id="p2name">???</span>
+            <span class="poke-type-badge type-normal" id="p2type">???</span>
+          </div>
+          <div class="hp-label-row">
+            <span class="hp-label">HP</span>
+            <span class="hp-numbers" id="hp2-nums">-- / --</span>
+          </div>
+          <div class="hpbar-track">
+            <div class="hpbar-fill" id="hp2" style="width:100%;background:var(--green-hp)"></div>
+          </div>
+          <span id="status2" class="status-badge" style="display:none"></span>
+        </div>
+        <img id="sprite2" class="sprite">
+      </div>
+
+      <!-- Player -->
+      <div id="wrap-player" class="poke-wrap">
+        <img id="sprite1" class="sprite">
+        <div class="hpbox">
+          <div class="hpbox-name">
+            <span class="poke-name" id="p1name">???</span>
+            <span class="poke-type-badge type-normal" id="p1type">???</span>
+          </div>
+          <div class="hp-label-row">
+            <span class="hp-label">HP</span>
+            <span class="hp-numbers" id="hp1-nums">-- / --</span>
+          </div>
+          <div class="hpbar-track">
+            <div class="hpbar-fill" id="hp1" style="width:100%;background:var(--green-hp)"></div>
+          </div>
+          <span id="status1" class="status-badge" style="display:none"></span>
+        </div>
+      </div>
+
+      <!-- Result overlay -->
+      <div id="result-overlay">
+        <div id="result-title"></div>
+        <div id="result-sub"></div>
+        <button id="result-btn" onclick="handleResultBtn()"></button>
+      </div>
+    </div>
+
+    <!-- Textbox -->
+    <div id="textbox-wrap">
+      <div id="textbox">Preparando torneio...<span id="cursor"></span></div>
+    </div>
+
+    <!-- Moves -->
+    <div id="moves-panel">
+      <div id="moves-header">► AÇÕES</div>
+      <div id="moves"></div>
+    </div>
+
+  </div>
+
+  <!-- Bottom bar -->
+  <div id="bottom-bar">
+    <div class="dpad">
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+    </div>
+    <div style="font-size:7px;color:#4d4d6c;text-align:center;line-height:1.8">
+      DAILY<br>TOURNAMENT
+    </div>
+    <button class="run-btn" onclick="tryRun()">✕ FUGIR</button>
+  </div>
+</div>
 
 <script>
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
 let p1, p2;
-let playerTurn = false; // Começa falso até carregar
+let playerTurn = false;
 let battleNumber = 1;
+let maxBattles = 3;
+let tournamentOver = false;
+let resultAction = null; // 'next' | 'retry'
 
-// Utilitário para pausar a execução (ritmo da batalha)
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ');
+const rng = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-const types = {
-    normal:{rock:.5,ghost:0,steel:.5},
-    fire:{fire:.5,water:.5,grass:2,ice:2,bug:2,rock:.5,dragon:.5,steel:2},
-    water:{fire:2,water:.5,grass:.5,ground:2,rock:2,dragon:.5},
-    grass:{fire:.5,water:2,grass:.5,ground:2,rock:2,dragon:.5},
-    electric:{water:2,electric:.5,grass:.5,ground:0,flying:2,dragon:.5},
-    ice:{grass:2,ground:2,flying:2,dragon:2},
-    fighting:{normal:2,rock:2,steel:2,ice:2,dark:2,ghost:0},
-    ground:{fire:2,electric:2,grass:.5,poison:2,flying:0,rock:2,steel:2},
-    flying:{grass:2,fighting:2,bug:2,rock:.5,steel:.5},
-    psychic:{fighting:2,poison:2,steel:.5,dark:0},
-    bug:{grass:2,psychic:2,dark:2,fire:.5,fighting:.5},
-    rock:{fire:2,ice:2,flying:2,bug:2},
-    ghost:{psychic:2,ghost:2,normal:0},
-    dragon:{dragon:2,steel:.5},
-    dark:{psychic:2,ghost:2},
-    steel:{rock:2,ice:2,fire:.5,water:.5,electric:.5}
+// ─────────────────────────────────────────
+//  TYPE CHART
+// ─────────────────────────────────────────
+const typeChart = {
+  normal:   {rock:.5, ghost:0, steel:.5},
+  fire:     {fire:.5, water:.5, grass:2, ice:2, bug:2, rock:.5, dragon:.5, steel:2},
+  water:    {fire:2, water:.5, grass:.5, ground:2, rock:2, dragon:.5},
+  grass:    {fire:.5, water:2, grass:.5, poison:.5, ground:2, rock:2, bug:.5, dragon:.5, steel:.5, flying:.5},
+  electric: {water:2, electric:.5, grass:.5, ground:0, flying:2, dragon:.5},
+  ice:      {water:.5, grass:2, ground:2, flying:2, dragon:2, ice:.5, steel:.5},
+  fighting: {normal:2, rock:2, steel:2, ice:2, dark:2, ghost:0, poison:.5, bug:.5, psychic:.5, flying:.5},
+  ground:   {fire:2, electric:2, grass:.5, poison:2, flying:0, rock:2, steel:2, bug:.5},
+  flying:   {grass:2, fighting:2, bug:2, rock:.5, steel:.5, electric:.5},
+  psychic:  {fighting:2, poison:2, steel:.5, dark:0, psychic:.5},
+  bug:      {grass:2, psychic:2, dark:2, fire:.5, fighting:.5, poison:.5, flying:.5, ghost:.5, steel:.5},
+  rock:     {fire:2, ice:2, flying:2, bug:2, fighting:.5, ground:.5, steel:.5},
+  ghost:    {psychic:2, ghost:2, normal:0, dark:.5},
+  dragon:   {dragon:2, steel:.5},
+  dark:     {psychic:2, ghost:2, fighting:.5, dark:.5},
+  steel:    {rock:2, ice:2, fairy:2, fire:.5, water:.5, electric:.5, steel:.5},
+  poison:   {grass:2, fairy:2, poison:.5, ground:.5, rock:.5, ghost:.5},
+  fairy:    {fighting:2, dragon:2, dark:2, fire:.5, poison:.5, steel:.5}
 };
 
-async function log(t) {
-    document.getElementById("textbox").innerText = t;
-    await sleep(1500); // Pausa para leitura
+function typeEffect(atkType, defType) {
+  return typeChart[atkType]?.[defType] ?? 1;
 }
 
-function typeEffect(a, b) { return types[a]?.[b] || 1; }
+// ─────────────────────────────────────────
+//  TYPE COLORS
+// ─────────────────────────────────────────
+const typeColors = {
+  normal:'#a0a0a0', fire:'#f08030', water:'#6890f0', grass:'#78c850',
+  electric:'#f8d030', ice:'#98d8d8', fighting:'#c03028', ground:'#e0c068',
+  flying:'#a890f0', psychic:'#f85888', bug:'#a8b820', rock:'#b8a038',
+  ghost:'#705898', dragon:'#7038f8', dark:'#705848', steel:'#b8b8d0',
+  poison:'#a040a0', fairy:'#ee99ac'
+};
 
+// ─────────────────────────────────────────
+//  TEXTBOX
+// ─────────────────────────────────────────
+async function log(text, delay = 1600) {
+  const box = document.getElementById('textbox');
+  box.innerHTML = text + '<span id="cursor"></span>';
+  await sleep(delay);
+}
+
+async function typeText(text, delay = 1600) {
+  const box = document.getElementById('textbox');
+  box.innerHTML = '<span id="cursor"></span>';
+  const chars = text.split('');
+  let current = '';
+  for (const ch of chars) {
+    current += ch;
+    box.innerHTML = current + '<span id="cursor"></span>';
+    await sleep(30);
+  }
+  await sleep(delay);
+}
+
+// ─────────────────────────────────────────
+//  FETCH POKEMON
+// ─────────────────────────────────────────
 async function getPokemon(id) {
-    let r = await fetch("https://pokeapi.co/api/v2/pokemon/" + id);
-    let d = await r.json();
-    let moves = [];
+  const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  const d = await r.json();
 
-    // Pegar atributos reais (HP e Speed)
-    let hpStat = d.stats.find(s => s.stat.name === 'hp').base_stat * 2;
-    let speedStat = d.stats.find(s => s.stat.name === 'speed').base_stat;
+  const stats = {};
+  d.stats.forEach(s => stats[s.stat.name] = s.base_stat);
 
-    for(let i=0; i<4; i++){
-        let m = d.moves[Math.floor(Math.random()*d.moves.length)].move;
-        let md = await fetch(m.url).then(r => r.json());
-        moves.push({
-            name: capitalize(md.name.replace('-', ' ')),
-            power: md.power || 0,
-            accuracy: md.accuracy || 100,
-            type: md.type.name,
-            damage: md.power != null,
-            effect: md.meta?.ailment?.name
-        });
-    }
+  // Pick 4 moves, prefer damage moves
+  let allMoves = [...d.moves];
+  shuffle(allMoves);
+  const picked = [];
+  const moveData = [];
 
-    return {
-        name: capitalize(d.name),
-        type: d.types[0].type.name,
-        hp: hpStat,
-        maxHp: hpStat,
-        speed: speedStat,
-        spriteFront: "https://play.pokemonshowdown.com/sprites/ani/" + d.name + ".gif",
-        spriteBack: "https://play.pokemonshowdown.com/sprites/ani-back/" + d.name + ".gif",
-        cry: "https://play.pokemonshowdown.com/audio/cries/" + d.name + ".mp3",
-        moves: moves,
-        status: null,
-        imgId: null // Será definido depois
-    };
+  for (const m of allMoves) {
+    if (picked.length >= 4) break;
+    try {
+      const md = await fetch(m.move.url).then(r => r.json());
+      if (!md.power && md.damage_class?.name === 'status' && moveData.filter(x => !x.damage).length >= 1) continue;
+      moveData.push({
+        name: capitalize(md.name),
+        power: md.power || 0,
+        accuracy: md.accuracy ?? 100,
+        type: md.type.name,
+        pp: md.pp || 10,
+        maxPP: md.pp || 10,
+        damage: md.power != null && md.power > 0,
+        damageClass: md.damage_class?.name || 'physical',
+        effect: md.meta?.ailment?.name || null,
+        effectChance: md.meta?.ailment_chance || 100,
+        heal: md.meta?.healing || 0,
+        priority: md.priority || 0
+      });
+      picked.push(m);
+    } catch(e) { continue; }
+  }
+
+  // Fallback if not enough moves
+  while (moveData.length < 4) {
+    moveData.push({ name: 'Tackle', power: 40, accuracy: 100, type: 'normal',
+      pp: 35, maxPP: 35, damage: true, damageClass: 'physical',
+      effect: null, effectChance: 0, heal: 0, priority: 0 });
+  }
+
+  const hp = stats['hp'] * 2 + 10;
+
+  return {
+    name: capitalize(d.name),
+    type: d.types[0].type.name,
+    types: d.types.map(t => t.type.name),
+    hp, maxHp: hp,
+    atk: stats['attack'],
+    def: stats['defense'],
+    spAtk: stats['special-attack'],
+    spDef: stats['special-defense'],
+    speed: stats['speed'],
+    moves: moveData,
+    status: null,
+    statusTurns: 0,
+    spriteFront: `https://play.pokemonshowdown.com/sprites/ani/${d.name}.gif`,
+    spriteBack: `https://play.pokemonshowdown.com/sprites/ani-back/${d.name}.gif`,
+    cry: `https://play.pokemonshowdown.com/audio/cries/${d.name}.mp3`,
+    spriteId: null
+  };
 }
 
-function updateHP() {
-    [p1, p2].forEach((p, idx) => {
-        let pct = (p.hp / p.maxHp) * 100;
-        if(pct < 0) pct = 0;
-        
-        let hpEl = document.getElementById("hp" + (idx + 1));
-        hpEl.style.width = pct + "%";
+// ─────────────────────────────────────────
+//  HP UPDATE
+// ─────────────────────────────────────────
+function updateHP(poke, idx) {
+  const pct = Math.max(0, (poke.hp / poke.maxHp) * 100);
+  const bar = document.getElementById(`hp${idx}`);
+  const nums = document.getElementById(`hp${idx}-nums`);
 
-        // Cores clássicas de HP
-        if(pct > 50) hpEl.style.background = "#22c55e"; // Verde
-        else if(pct > 20) hpEl.style.background = "#eab308"; // Amarelo
-        else hpEl.style.background = "#ef4444"; // Vermelho
-    });
+  bar.style.width = pct + '%';
+  bar.style.background = pct > 50 ? 'var(--green-hp)' : pct > 20 ? 'var(--yellow-hp)' : 'var(--red-hp)';
+  nums.textContent = `${Math.max(0, poke.hp)} / ${poke.maxHp}`;
 }
 
-async function executeMove(attacker, defender, move) {
-    if (attacker.hp <= 0) return; // Se morreu, não ataca
+function updateBothHP() {
+  updateHP(p1, 1);
+  updateHP(p2, 2);
+}
 
-    await log(`${attacker.name} usou ${move.name}!`);
+// ─────────────────────────────────────────
+//  STATUS
+// ─────────────────────────────────────────
+function updateStatusBadge(poke, idx) {
+  const badge = document.getElementById(`status${idx}`);
+  if (!poke.status || poke.status === 'none') {
+    badge.style.display = 'none';
+    return;
+  }
+  const labels = { poison:'PSN', burn:'BRN', paralysis:'PAR', sleep:'SLP', freeze:'FRZ', toxic:'PSN' };
+  const classes = { poison:'status-psn', burn:'status-brn', paralysis:'status-par', sleep:'status-slp', freeze:'status-frz', toxic:'status-psn' };
+  badge.style.display = 'inline-block';
+  badge.textContent = labels[poke.status] || poke.status.toUpperCase().slice(0,3);
+  badge.className = `status-badge ${classes[poke.status] || 'status-psn'}`;
+}
 
-    if (Math.random() * 100 > move.accuracy) {
-        await log("O ataque errou!");
-        return;
+async function applyStatusDamage(poke, idx) {
+  if (!poke.status || poke.status === 'none') return false;
+
+  if (poke.status === 'sleep') {
+    poke.statusTurns = (poke.statusTurns || 0) + 1;
+    if (poke.statusTurns >= rng(2, 5)) {
+      poke.status = null;
+      updateStatusBadge(poke, idx);
+      await log(`${poke.name} acordou!`);
+    } else {
+      await log(`${poke.name} está dormindo...`);
+      return true; // skip turn
+    }
+  }
+
+  if (poke.status === 'freeze') {
+    if (Math.random() < 0.2) {
+      poke.status = null;
+      updateStatusBadge(poke, idx);
+      await log(`${poke.name} descongelou!`);
+    } else {
+      await log(`${poke.name} está congelado!`);
+      return true;
+    }
+  }
+
+  if (poke.status === 'paralysis' && Math.random() < 0.25) {
+    await log(`${poke.name} está paralisado e não consegue se mover!`);
+    return true;
+  }
+
+  if (poke.status === 'poison' || poke.status === 'toxic') {
+    const dmg = Math.floor(poke.maxHp / 8);
+    poke.hp -= dmg;
+    updateHP(poke, idx);
+    spawnDmgPopup(idx === 1 ? 'sprite1' : 'sprite2', dmg, '');
+    await log(`${poke.name} sofreu dano de veneno!`);
+    if (poke.hp <= 0) return false;
+  }
+
+  if (poke.status === 'burn') {
+    const dmg = Math.floor(poke.maxHp / 16);
+    poke.hp -= dmg;
+    updateHP(poke, idx);
+    spawnDmgPopup(idx === 1 ? 'sprite1' : 'sprite2', dmg, '');
+    await log(`${poke.name} sofreu dano de queimadura!`);
+  }
+
+  return false;
+}
+
+// ─────────────────────────────────────────
+//  DAMAGE POPUP
+// ─────────────────────────────────────────
+function spawnDmgPopup(spriteId, dmg, cls = '') {
+  const el = document.getElementById(spriteId);
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const arena = document.getElementById('arena').getBoundingClientRect();
+  const pop = document.createElement('div');
+  pop.className = `dmg-popup ${cls}`;
+  pop.textContent = cls === 'heal' ? `+${dmg}` : `-${dmg}`;
+  pop.style.left = (rect.left - arena.left + rect.width/2 - 20) + 'px';
+  pop.style.top  = (rect.top - arena.top) + 'px';
+  document.getElementById('arena').appendChild(pop);
+  setTimeout(() => pop.remove(), 1200);
+}
+
+// ─────────────────────────────────────────
+//  EFFECTIVENESS BANNER
+// ─────────────────────────────────────────
+async function showEffectBanner(text, color) {
+  const b = document.getElementById('effect-banner');
+  b.textContent = text;
+  b.style.color = color;
+  b.style.borderColor = color;
+  b.classList.add('show');
+  await sleep(900);
+  b.classList.remove('show');
+  await sleep(200);
+}
+
+// ─────────────────────────────────────────
+//  CALC DAMAGE
+// ─────────────────────────────────────────
+function calcDamage(attacker, defender, move) {
+  const lvl = 50;
+  const atkStat = move.damageClass === 'special' ? attacker.spAtk : attacker.atk;
+  const defStat = move.damageClass === 'special' ? defender.spDef : defender.def;
+
+  // Gen formula simplified
+  let dmg = Math.floor((((2 * lvl / 5 + 2) * move.power * atkStat / defStat) / 50) + 2);
+
+  // STAB
+  if (attacker.types.includes(move.type)) dmg = Math.floor(dmg * 1.5);
+
+  // Type effectiveness (check all defender types)
+  let eff = 1;
+  for (const defType of (defender.types || [defender.type])) {
+    eff *= typeEffect(move.type, defType);
+  }
+  dmg = Math.floor(dmg * eff);
+
+  // Burn halves physical
+  if (attacker.status === 'burn' && move.damageClass === 'physical') dmg = Math.floor(dmg / 2);
+
+  // Random variance 85–100%
+  dmg = Math.floor(dmg * rng(85, 100) / 100);
+  if (dmg < 1) dmg = 1;
+
+  return { dmg, eff };
+}
+
+// ─────────────────────────────────────────
+//  EXECUTE MOVE
+// ─────────────────────────────────────────
+async function executeMove(attacker, defender, move, atkIdx, defIdx) {
+  if (attacker.hp <= 0) return;
+
+  const atkSprite = document.getElementById(`sprite${atkIdx}`);
+  const defSprite = document.getElementById(`sprite${defIdx}`);
+
+  await log(`${attacker.name} usou ${move.name}!`);
+  move.pp = Math.max(0, move.pp - 1);
+  renderMoves(); // update PP display
+
+  // Accuracy check
+  if (Math.random() * 100 > (move.accuracy || 100)) {
+    await log(`O ataque de ${attacker.name} errou!`, 1200);
+    return;
+  }
+
+  // Play cry
+  try { new Audio(attacker.cry).play().catch(()=>{}); } catch(e) {}
+
+  // Attack lunge animation
+  atkSprite.classList.add(atkIdx === 1 ? 'anim-attack-p' : 'anim-attack-e');
+  await sleep(320);
+  atkSprite.classList.remove('anim-attack-p', 'anim-attack-e');
+
+  if (move.damage && move.power > 0) {
+    const { dmg, eff } = calcDamage(attacker, defender, move);
+
+    // Hit animation
+    defSprite.classList.add('anim-hit');
+    await sleep(500);
+    defSprite.classList.remove('anim-hit');
+
+    defender.hp -= dmg;
+    updateHP(defender, defIdx);
+
+    const cls = eff > 1 ? 'super' : eff < 1 ? 'not-very' : '';
+    spawnDmgPopup(`sprite${defIdx}`, dmg, cls);
+
+    if (eff === 0) {
+      await showEffectBanner('NÃO AFETA...', '#64748b');
+    } else if (eff >= 2) {
+      await showEffectBanner('SUPER EFETIVO!', '#f5c518');
+    } else if (eff < 1) {
+      await showEffectBanner('Pouco efetivo...', '#94a3b8');
     }
 
-    try { new Audio(attacker.cry).play(); } catch(e){}
+    // Critical hit chance 6.25%
+    if (Math.random() < 0.0625) {
+      await log(`Acerto crítico!`, 900);
+    }
 
-    if (move.damage && move.power > 0) {
-        // Animação de hit
-        document.getElementById(defender.imgId).classList.add("hit-anim");
-        setTimeout(() => document.getElementById(defender.imgId).classList.remove("hit-anim"), 600);
-
-        let stab = attacker.type == move.type ? 1.5 : 1;
-        let effectiveness = typeEffect(move.type, defender.type);
-        
-        // Fórmula de dano simplificada mas baseada em atributos reais
-        let dmg = Math.floor((move.power * stab * effectiveness) / 2.5);
-        if(dmg < 1) dmg = 1;
-
-        defender.hp -= dmg;
-        updateHP();
-
-        if (effectiveness > 1) await log("Foi super efetivo!");
-        if (effectiveness < 1) await log("Não foi muito efetivo...");
-
-    } else if (move.effect && move.effect !== "none") {
+  } else if (move.effect && move.effect !== 'none') {
+    // Status move
+    if (!defender.status || defender.status === 'none') {
+      if (Math.random() * 100 <= (move.effectChance || 100)) {
         defender.status = move.effect;
-        await log(`${defender.name} sofreu ${move.effect}!`);
+        defender.statusTurns = 0;
+        updateStatusBadge(defender, defIdx);
+        defSprite.classList.add('anim-status');
+        await sleep(2000);
+        defSprite.classList.remove('anim-status');
+        const msgs = {
+          poison: `${defender.name} foi envenenado!`,
+          burn: `${defender.name} está em chamas!`,
+          paralysis: `${defender.name} está paralisado!`,
+          sleep: `${defender.name} adormeceu!`,
+          freeze: `${defender.name} foi congelado!`
+        };
+        await log(msgs[move.effect] || `${defender.name} sofreu ${move.effect}!`);
+      } else {
+        await log(`Mas não teve efeito...`, 1000);
+      }
+    } else {
+      await log(`Mas ${defender.name} já tem um status!`, 1000);
     }
+  } else {
+    await log(`Mas não aconteceu nada...`, 1000);
+  }
+
+  // Self-heal
+  if (move.heal > 0) {
+    const healAmt = Math.floor(attacker.maxHp * move.heal / 100);
+    attacker.hp = Math.min(attacker.maxHp, attacker.hp + healAmt);
+    updateHP(attacker, atkIdx);
+    spawnDmgPopup(`sprite${atkIdx}`, healAmt, 'heal');
+  }
 }
 
+// ─────────────────────────────────────────
+//  ENEMY AI
+// ─────────────────────────────────────────
 function enemyAI() {
-    let damageMoves = p2.moves.filter(m => m.damage && m.power > 0);
-    if (damageMoves.length) {
-        let best = damageMoves[0];
-        let score = 0;
-        damageMoves.forEach(m => {
-            let s = m.power * typeEffect(m.type, p1.type);
-            if(s > score) { score = s; best = m; }
-        });
-        return best;
+  const available = p2.moves.filter(m => m.pp > 0);
+  if (!available.length) return { name: 'Struggle', power: 50, accuracy: 100, type: 'normal', damage: true, damageClass: 'physical', pp: 99, maxPP: 99, effect: null, effectChance: 0, heal: 0, priority: 0 };
+
+  // Score each move
+  let best = available[0];
+  let bestScore = -Infinity;
+  for (const m of available) {
+    let score = 0;
+    if (m.damage && m.power > 0) {
+      score = m.power * typeEffect(m.type, p1.type);
+      if (p2.types.includes(m.type)) score *= 1.5;
+    } else if (m.effect && m.effect !== 'none' && (!p1.status || p1.status === 'none')) {
+      score = 60; // status moves decent value
     }
-    return p2.moves[0];
+    // slight randomness to not be perfectly optimal
+    score += Math.random() * 20 - 10;
+    if (score > bestScore) { bestScore = score; best = m; }
+  }
+  return best;
 }
 
-function toggleButtons(state) {
-    const btns = document.querySelectorAll("#moves button");
-    btns.forEach(b => b.disabled = !state);
-}
-
+// ─────────────────────────────────────────
+//  TURN
+// ─────────────────────────────────────────
 async function playTurn(moveIndex) {
-    if (!playerTurn) return;
-    playerTurn = false;
-    toggleButtons(false);
+  if (!playerTurn) return;
+  playerTurn = false;
+  toggleButtons(false);
 
-    let pMove = p1.moves[moveIndex];
-    let eMove = enemyAI();
-
-    // Calcula velocidade para ver quem ataca primeiro
-    let first = p1.speed >= p2.speed ? p1 : p2;
-    let second = p1.speed >= p2.speed ? p2 : p1;
-    let firstMove = p1.speed >= p2.speed ? pMove : eMove;
-    let secondMove = p1.speed >= p2.speed ? eMove : pMove;
-
-    await executeMove(first, second, firstMove);
-    
-    if (second.hp > 0) {
-        await executeMove(second, first, secondMove);
-    }
-
-    // Checar quem desmaiou (fainted)
-    if (p1.hp <= 0) {
-        document.getElementById("sprite1").classList.add("faint-anim");
-        await log(`${p1.name} desmaiou!`);
-        loseBattle();
-        return;
-    }
-    
-    if (p2.hp <= 0) {
-        document.getElementById("sprite2").classList.add("faint-anim");
-        await log(`O ${p2.name} inimigo desmaiou!`);
-        winBattle();
-        return;
-    }
-
-    // Se ninguém morreu, volta para o jogador
-    await log("O que " + p1.name + " deve fazer?");
+  const pMove = p1.moves[moveIndex];
+  if (!pMove || pMove.pp <= 0) {
+    await log('Sem PP! Escolha outro golpe.', 1000);
     playerTurn = true;
     toggleButtons(true);
+    return;
+  }
+
+  const eMove = enemyAI();
+
+  // Determine order by priority then speed
+  const pFirst = (pMove.priority > eMove.priority) ||
+    (pMove.priority === eMove.priority && p1.speed >= p2.speed);
+
+  const [first, firstMove, firstIdx, second, secondMove, secondIdx] = pFirst
+    ? [p1, pMove, 1, p2, eMove, 2]
+    : [p2, eMove, 2, p1, pMove, 1];
+
+  // Status damage before turn
+  const firstSkip = await applyStatusDamage(first, firstIdx);
+  if (first.hp <= 0) { await endCheck(); return; }
+
+  if (!firstSkip) {
+    await executeMove(first, second, firstMove, firstIdx, secondIdx);
+    if (await endCheck()) return;
+  }
+
+  const secondSkip = await applyStatusDamage(second, secondIdx);
+  if (second.hp <= 0) { await endCheck(); return; }
+
+  if (!secondSkip) {
+    await executeMove(second, first, secondMove, secondIdx, firstIdx);
+    if (await endCheck()) return;
+  }
+
+  await log(`O que ${p1.name} deve fazer?`, 800);
+  playerTurn = true;
+  toggleButtons(true);
 }
 
+async function endCheck() {
+  if (p1.hp <= 0) {
+    document.getElementById('sprite1').classList.add('anim-faint');
+    await log(`${p1.name} desmaiou!`);
+    await handleLoss();
+    return true;
+  }
+  if (p2.hp <= 0) {
+    document.getElementById('sprite2').classList.add('anim-faint');
+    await log(`${p2.name} inimigo desmaiou!`);
+    await handleWin();
+    return true;
+  }
+  return false;
+}
+
+// ─────────────────────────────────────────
+//  WIN / LOSE
+// ─────────────────────────────────────────
+async function handleWin() {
+  saveTournament(true);
+  battleNumber++;
+  updateTournamentPips();
+
+  if (battleNumber <= maxBattles) {
+    showResult('🌟 VITÓRIA! 🌟', `Batalha ${battleNumber-1} vencida!\nPróxima batalha preparando...`, 'PRÓXIMA BATALHA', 'next');
+  } else {
+    showResult('🏆 CAMPEÃO! 🏆', 'Você completou o\nTorneio Diário!\nVolte amanhã!', 'VER RESULTADO', 'done');
+    tournamentOver = true;
+  }
+}
+
+async function handleLoss() {
+  saveTournament(false);
+  tournamentOver = true;
+  showResult('💀 DERROTA', `${p1.name} não conseguiu...\nTente novamente amanhã!`, 'VER RANKING', 'done');
+}
+
+function showResult(title, sub, btnText, action) {
+  resultAction = action;
+  const overlay = document.getElementById('result-overlay');
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+  document.getElementById('result-btn').textContent = btnText;
+  overlay.classList.add('show');
+  const isWin = action === 'next' || (action === 'done' && battleNumber > maxBattles);
+  document.getElementById('result-title').style.color = isWin ? '#f5c518' : '#ef4444';
+}
+
+function hideResult() {
+  document.getElementById('result-overlay').classList.remove('show');
+}
+
+function handleResultBtn() {
+  if (resultAction === 'next') {
+    hideResult();
+    setTimeout(startBattle, 400);
+  }
+  // 'done' – just leave visible
+}
+
+// ─────────────────────────────────────────
+//  RUN
+// ─────────────────────────────────────────
+async function tryRun() {
+  if (!playerTurn || tournamentOver) return;
+  if (Math.random() < 0.5) {
+    await log(`${p1.name} não conseguiu fugir!`, 1200);
+  } else {
+    await log(`Você fugiu da batalha!`, 1200);
+    await handleLoss();
+  }
+}
+
+// ─────────────────────────────────────────
+//  MOVES RENDER
+// ─────────────────────────────────────────
 function renderMoves() {
-    const movesDiv = document.getElementById("moves");
-    movesDiv.innerHTML = "";
-    p1.moves.forEach((m, i) => {
-        let b = document.createElement("button");
-        let icon = m.damage ? "⚔️" : "🔮";
-        b.innerText = `${m.name} ${icon}`;
-        b.onclick = () => playTurn(i);
-        b.disabled = true; // Habilita quando o turno iniciar
-        movesDiv.appendChild(b);
-    });
+  const div = document.getElementById('moves');
+  if (!p1) return;
+  div.innerHTML = '';
+  p1.moves.forEach((m, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'move-btn';
+    const color = typeColors[m.type] || '#a0a0a0';
+    const icon = m.damage ? '⚔' : '✦';
+    btn.innerHTML = `
+      <span class="move-name">${icon} ${m.name}</span>
+      <div class="move-meta">
+        <div class="move-type-dot" style="background:${color}"></div>
+        <span class="move-pp">PP ${m.pp}/${m.maxPP}</span>
+        ${m.power ? `<span class="move-power-label">· POW ${m.power}</span>` : ''}
+      </div>`;
+    btn.disabled = true;
+    btn.onclick = () => playTurn(i);
+    div.appendChild(btn);
+  });
 }
 
-function updateTournament() {
-    let today = new Date().toDateString();
-    let data = JSON.parse(localStorage.getItem("tournament") || "{}");
-    let wins = data[today]?.wins || 0;
-    document.getElementById("tournament").innerText = "Vitórias hoje: " + wins + " / 3";
+function toggleButtons(enabled) {
+  document.querySelectorAll('.move-btn').forEach(b => b.disabled = !enabled);
+}
+
+// ─────────────────────────────────────────
+//  TOURNAMENT PERSISTENCE
+// ─────────────────────────────────────────
+function getTournamentData() {
+  try { return JSON.parse(localStorage.getItem('pkmnTournament') || '{}'); } catch(e) { return {}; }
 }
 
 function saveTournament(win) {
-    let today = new Date().toDateString();
-    let data = JSON.parse(localStorage.getItem("tournament") || "{}");
-    if(!data[today]) data[today] = {wins: 0};
-    if(win) data[today].wins++;
-    localStorage.setItem("tournament", JSON.stringify(data));
-    updateTournament();
+  const today = new Date().toDateString();
+  const data = getTournamentData();
+  if (!data[today]) data[today] = { wins: 0, battles: 0 };
+  data[today].battles++;
+  if (win) data[today].wins++;
+  localStorage.setItem('pkmnTournament', JSON.stringify(data));
+  updateTournamentPips();
 }
 
-async function winBattle() {
-    saveTournament(true);
-    battleNumber++;
-    if(battleNumber <= 3){
-        await log("Preparando próxima batalha...");
-        setTimeout(start, 1000);
-    } else {
-        await log("Você venceu o Torneio Diário!");
+function updateTournamentPips() {
+  const today = new Date().toDateString();
+  const data = getTournamentData();
+  const d = data[today] || { wins: 0, battles: 0 };
+
+  for (let i = 1; i <= 3; i++) {
+    const pip = document.getElementById(`pip${i}`);
+    pip.className = 'battle-pip';
+    if (i < battleNumber) {
+      // completed battles
+      if (i <= d.wins) pip.classList.add('won');
+      else pip.classList.add('lost');
+    } else if (i === battleNumber && !tournamentOver) {
+      pip.classList.add('current');
     }
+  }
 }
 
-async function loseBattle() {
-    saveTournament(false);
-    await log("Você perdeu o torneio. Tente novamente amanhã!");
+// ─────────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = rng(0, i);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
-async function start() {
-    document.getElementById("sprite1").classList.remove("faint-anim");
-    document.getElementById("sprite2").classList.remove("faint-anim");
-    document.getElementById("textbox").innerText = "Procurando oponente...";
-    
-    // Sorteia da geração 1 (1 a 151)
-    p1 = await getPokemon(Math.floor(Math.random() * 151) + 1);
-    p2 = await getPokemon(Math.floor(Math.random() * 151) + 1);
+// ─────────────────────────────────────────
+//  START BATTLE
+// ─────────────────────────────────────────
+async function startBattle() {
+  playerTurn = false;
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.opacity = '1';
+  overlay.style.display = 'flex';
 
-    p1.imgId = "sprite1";
-    p2.imgId = "sprite2";
+  // Reset sprites
+  ['sprite1','sprite2'].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = 'sprite';
+    el.style.opacity = '1';
+    el.style.transform = '';
+  });
 
-    document.getElementById("p1name").innerText = p1.name;
-    document.getElementById("p2name").innerText = p2.name;
+  document.getElementById('textbox').innerHTML = 'Procurando oponente...<span id="cursor"></span>';
+  document.getElementById('moves').innerHTML = '';
 
-    document.getElementById("sprite1").src = p1.spriteBack;
-    document.getElementById("sprite2").src = p2.spriteFront;
+  // Random Gen 1
+  const id1 = rng(1, 151);
+  let id2 = rng(1, 151);
+  while (id2 === id1) id2 = rng(1, 151);
 
-    updateHP();
-    renderMoves();
-    updateTournament();
+  document.getElementById('loading-text').textContent = 'CARREGANDO POKÉMON...';
+  [p1, p2] = await Promise.all([getPokemon(id1), getPokemon(id2)]);
+  p1.spriteId = 'sprite1';
+  p2.spriteId = 'sprite2';
 
-    try { new Audio(p2.cry).play(); } catch(e){}
-    await log(`Um ${p2.name} selvagem apareceu!`);
-    await log(`Vai, ${p1.name}!`);
-    await log(`O que ${p1.name} deve fazer?`);
-    
-    playerTurn = true;
-    toggleButtons(true);
+  // Fade out loading
+  overlay.style.opacity = '0';
+  setTimeout(() => { overlay.style.display = 'none'; }, 500);
+
+  // Set names and types
+  document.getElementById('p1name').textContent = p1.name;
+  document.getElementById('p2name').textContent = p2.name;
+
+  const p1TypeEl = document.getElementById('p1type');
+  const p2TypeEl = document.getElementById('p2type');
+  p1TypeEl.textContent = p1.type.toUpperCase();
+  p1TypeEl.className = `poke-type-badge type-${p1.type}`;
+  p2TypeEl.textContent = p2.type.toUpperCase();
+  p2TypeEl.className = `poke-type-badge type-${p2.type}`;
+
+  // Sprites
+  const s1 = document.getElementById('sprite1');
+  const s2 = document.getElementById('sprite2');
+  s1.src = p1.spriteBack;
+  s2.src = p2.spriteFront;
+  s1.classList.add('anim-enter-player');
+  s2.classList.add('anim-enter-enemy');
+  setTimeout(() => { s1.classList.remove('anim-enter-player'); s1.classList.add('anim-float'); }, 600);
+  setTimeout(() => { s2.classList.remove('anim-enter-enemy'); }, 600);
+
+  // Status badges
+  updateStatusBadge(p1, 1);
+  updateStatusBadge(p2, 2);
+
+  updateBothHP();
+  renderMoves();
+  updateTournamentPips();
+
+  // Cry + intro messages
+  try { new Audio(p2.cry).play().catch(()=>{}); } catch(e) {}
+  await typeText(`Um ${p2.name} selvagem apareceu!`);
+  try { new Audio(p1.cry).play().catch(()=>{}); } catch(e) {}
+  await log(`Vai, ${p1.name}!`);
+  await log(`O que ${p1.name} deve fazer?`, 800);
+
+  playerTurn = true;
+  toggleButtons(true);
 }
 
-// Inicia o jogo
-start();
+// ─────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────
+updateTournamentPips();
+startBattle();
 </script>
-
 </body>
 </html>
