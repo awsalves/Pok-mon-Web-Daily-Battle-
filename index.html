@@ -39,11 +39,7 @@ body {
 }
 
 /* ─── HEADER ─── */
-#header {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
+#header { text-align: center; margin-bottom: 16px; }
 #header h1 {
   font-size: 13px;
   letter-spacing: 2px;
@@ -51,76 +47,36 @@ body {
   text-shadow: 0 0 20px rgba(245,197,24,0.5), 2px 2px 0 #7a6010;
   margin-bottom: 6px;
 }
-
-#header .subtitle {
-  font-size: 7px;
-  color: #6b7aa1;
-  letter-spacing: 3px;
-}
+#header .subtitle { font-size: 7px; color: #6b7aa1; letter-spacing: 3px; }
 
 /* ─── TOURNAMENT BAR ─── */
-#tournament-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  align-items: center;
-}
-
+#tournament-bar { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
 .battle-pip {
-  width: 28px;
-  height: 28px;
+  width: 28px; height: 28px;
   border: 2px solid #3d3d5c;
   border-radius: 50%;
   background: #1a1a2e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   font-size: 10px;
   transition: all 0.4s;
-  position: relative;
 }
-
-.battle-pip.won {
-  background: var(--gold);
-  border-color: #d4a800;
-  box-shadow: 0 0 12px rgba(245,197,24,0.6);
-}
-
-.battle-pip.lost {
-  background: var(--red-hp);
-  border-color: #c03030;
-}
-
-.battle-pip.current {
-  border-color: var(--blue-accent);
-  box-shadow: 0 0 10px rgba(74,158,255,0.5);
-  animation: pulse-pip 1.5s infinite;
-}
-
+.battle-pip.won  { background: var(--gold); border-color: #d4a800; box-shadow: 0 0 12px rgba(245,197,24,0.6); }
+.battle-pip.lost { background: var(--red-hp); border-color: #c03030; }
+.battle-pip.current { border-color: var(--blue-accent); box-shadow: 0 0 10px rgba(74,158,255,0.5); animation: pulse-pip 1.5s infinite; }
 @keyframes pulse-pip {
   0%, 100% { box-shadow: 0 0 10px rgba(74,158,255,0.5); }
-  50% { box-shadow: 0 0 20px rgba(74,158,255,0.9); }
+  50%       { box-shadow: 0 0 20px rgba(74,158,255,0.9); }
 }
-
-.battle-label {
-  font-size: 7px;
-  color: #6b7aa1;
-  margin: 0 4px;
-}
+.battle-label { font-size: 7px; color: #6b7aa1; margin: 0 4px; }
 
 /* ─── GAME BOY SHELL ─── */
 #gameboy {
-  width: 100%;
-  max-width: 440px;
+  width: 100%; max-width: 440px;
   background: #2a2a3e;
   border: 3px solid #3d3d5c;
   border-radius: 12px 12px 40px 12px;
-  box-shadow:
-    0 0 0 1px #1a1a2e,
-    0 20px 60px rgba(0,0,0,0.8),
-    inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: 0 0 0 1px #1a1a2e, 0 20px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
   overflow: hidden;
-  position: relative;
 }
 
 /* ─── SCREEN ─── */
@@ -129,69 +85,45 @@ body {
   margin: 12px;
   border-radius: 6px;
   border: 3px solid #111;
-  box-shadow:
-    inset 0 0 20px rgba(0,0,0,0.5),
-    0 0 30px rgba(74,158,255,0.1);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 0 30px rgba(74,158,255,0.1);
   overflow: hidden;
-  position: relative;
 }
 
 /* ─── ARENA ─── */
 #arena {
   height: 220px;
   position: relative;
-  background:
-    linear-gradient(180deg,
-      #1a3a5c 0%,
-      #2a5580 30%,
-      #3a6f9a 55%,
-      #4a8ab8 55%,
-      #5a9fd0 60%,
-      #6ab5e8 65%
-    );
+  background: linear-gradient(180deg,
+    #1a3a5c 0%, #2a5580 30%, #3a6f9a 55%,
+    #4a8ab8 55%, #5a9fd0 60%, #6ab5e8 65%
+  );
   overflow: hidden;
 }
-
-/* Ground */
 #arena::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0; right: 0;
+  bottom: 0; left: 0; right: 0;
   height: 70px;
-  background: linear-gradient(180deg,
-    #2d5a1e 0%,
-    #3a7428 30%,
-    #4a8f35 60%,
-    #5aad42 100%
-  );
+  background: linear-gradient(180deg, #2d5a1e 0%, #3a7428 30%, #4a8f35 60%, #5aad42 100%);
   border-top: 3px solid #1f3d15;
 }
-
-/* Clouds */
 .cloud {
   position: absolute;
   background: rgba(255,255,255,0.15);
   border-radius: 20px;
   animation: drift linear infinite;
 }
-
 @keyframes drift {
   from { transform: translateX(-120px); }
-  to { transform: translateX(calc(100vw + 120px)); }
+  to   { transform: translateX(calc(100vw + 120px)); }
 }
 
 /* ─── POKEMON CONTAINERS ─── */
-.poke-wrap {
-  position: absolute;
-  z-index: 10;
-  transition: all 0.3s ease;
-}
-
-#wrap-enemy { top: 10px; right: 15px; text-align: right; }
+.poke-wrap { position: absolute; z-index: 10; transition: all 0.3s ease; }
+#wrap-enemy  { top: 10px; right: 15px; text-align: right; }
 #wrap-player { bottom: 10px; left: 10px; z-index: 11; }
 
-/* ─── HP BOX (estilo DS) ─── */
+/* ─── HP BOX ─── */
 .hpbox {
   background: var(--cream);
   color: #1a1a2e;
@@ -200,96 +132,52 @@ body {
   border-radius: 6px;
   box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
   min-width: 150px;
-  position: relative;
 }
-
-#wrap-enemy .hpbox { margin-bottom: 4px; }
+#wrap-enemy .hpbox  { margin-bottom: 4px; }
 #wrap-player .hpbox { margin-top: 4px; }
-
 .hpbox-name {
-  font-size: 7px;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-  gap: 6px;
+  font-size: 7px; font-weight: bold;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 4px; gap: 6px;
 }
-
 .poke-name { letter-spacing: 0.5px; }
-
 .poke-type-badge {
-  font-size: 5px;
-  padding: 2px 4px;
-  border-radius: 3px;
-  text-transform: uppercase;
-  color: white;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
+  font-size: 5px; padding: 2px 4px; border-radius: 3px;
+  text-transform: uppercase; color: white; font-weight: bold;
+  letter-spacing: 0.5px; flex-shrink: 0;
 }
-
-.hp-label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3px;
-}
-
-.hp-label { font-size: 6px; color: #5a5040; }
-
+.hp-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+.hp-label   { font-size: 6px; color: #5a5040; }
 .hp-numbers { font-size: 6px; color: #1a1a2e; }
-
-.hpbar-track {
-  background: #c8bfa8;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  border: 1px solid #a09070;
-}
-
+.hpbar-track { background: #c8bfa8; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #a09070; }
 .hpbar-fill {
-  height: 100%;
-  border-radius: 4px;
+  height: 100%; border-radius: 4px;
   transition: width 0.4s ease, background 0.4s ease;
   position: relative;
 }
-
 .hpbar-fill::after {
   content: '';
   position: absolute;
-  top: 1px; left: 2px; right: 2px;
-  height: 2px;
-  background: rgba(255,255,255,0.4);
-  border-radius: 2px;
+  top: 1px; left: 2px; right: 2px; height: 2px;
+  background: rgba(255,255,255,0.4); border-radius: 2px;
 }
-
-/* Status badge */
-.status-badge {
-  display: inline-block;
-  font-size: 5px;
-  padding: 1px 4px;
-  border-radius: 3px;
-  margin-left: 4px;
-  vertical-align: middle;
-}
-
+.status-badge { display: inline-block; font-size: 5px; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
 .status-psn { background: #a855f7; color: white; }
 .status-brn { background: #f97316; color: white; }
 .status-par { background: #eab308; color: #1a1a2e; }
 .status-slp { background: #64748b; color: white; }
 .status-frz { background: #67e8f9; color: #0e7490; }
 
-/* ─── SPRITES ─── */
+/* ─── SPRITES (tamanho uniforme) ─── */
 .sprite {
   image-rendering: pixelated;
   display: block;
+  width: 96px !important;
+  height: 96px !important;
+  object-fit: contain;
   filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5));
   transition: transform 0.3s ease, opacity 0.5s ease, filter 0.3s ease;
 }
-
-#sprite1 { width: 110px; }
-#sprite2 { width: 90px; }
 
 /* ─── TEXTBOX ─── */
 #textbox-wrap {
@@ -301,15 +189,12 @@ body {
   align-items: center;
   position: relative;
 }
-
 #textbox-wrap::before {
   content: '';
   position: absolute;
-  top: -1px; left: 0; right: 0;
-  height: 2px;
+  top: -1px; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
 }
-
 #textbox {
   font-size: 9px;
   color: #1a1a2e;
@@ -317,45 +202,72 @@ body {
   font-family: 'Press Start 2P', monospace;
   min-height: 36px;
 }
-
-/* Blinking cursor */
 #cursor {
-  display: inline-block;
-  width: 8px;
-  height: 10px;
-  background: #1a1a2e;
-  margin-left: 4px;
+  display: inline-block; width: 8px; height: 10px;
+  background: #1a1a2e; margin-left: 4px;
   animation: blink-cursor 0.7s step-end infinite;
   vertical-align: middle;
 }
+@keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-@keyframes blink-cursor {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* ─── MOVES PANEL ─── */
-#moves-panel {
+/* ─── ACTION MENU ─── */
+#action-panel {
   background: #1a1a2e;
   border-top: 3px solid #111;
   padding: 8px;
 }
 
-#moves-header {
-  font-size: 6px;
-  color: #4a9eff;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  padding-left: 2px;
+/* Main action menu: Lutar / Mochila / Fugir */
+#main-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
 }
+.action-btn {
+  padding: 10px 4px;
+  border: 2px solid #4d4d7c;
+  background: #252545;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #e2e8f0;
+  transition: all 0.15s;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.action-btn:hover:not(:disabled) {
+  background: #363666;
+  border-color: var(--blue-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(74,158,255,0.35);
+}
+.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.action-btn .btn-icon { font-size: 14px; line-height: 1; }
+.action-btn.btn-fight  { border-color: #ef4444; }
+.action-btn.btn-fight:hover:not(:disabled)  { border-color: #ef4444; box-shadow: 0 3px 10px rgba(239,68,68,0.4); }
+.action-btn.btn-bag    { border-color: #f97316; }
+.action-btn.btn-bag:hover:not(:disabled)    { border-color: #f97316; box-shadow: 0 3px 10px rgba(249,115,22,0.4); }
+.action-btn.btn-run    { border-color: #64748b; }
+.action-btn.btn-run:hover:not(:disabled)    { border-color: #94a3b8; box-shadow: 0 3px 10px rgba(148,163,184,0.3); }
 
+/* ─── MOVES SUBMENU ─── */
+#moves-panel { display: none; }
+#moves-panel.visible { display: block; }
+#moves-header {
+  font-size: 6px; color: var(--blue-accent);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 6px; padding-left: 2px;
+  display: flex; justify-content: space-between; align-items: center;
+}
 #moves {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
 }
-
 .move-btn {
   padding: 8px 6px;
   border: 2px solid var(--btn-border);
@@ -371,42 +283,75 @@ body {
   overflow: hidden;
   line-height: 1.5;
 }
-
 .move-btn:hover:not(:disabled) {
   background: #fff;
   border-color: var(--blue-accent);
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(74,158,255,0.3);
 }
-
-.move-btn:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: none;
-}
-
-.move-btn:disabled {
-  background: #c8c0a8;
-  cursor: not-allowed;
-  color: #7a7060;
-  border-color: #a09080;
-}
-
+.move-btn:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
+.move-btn:disabled { background: #c8c0a8; cursor: not-allowed; color: #7a7060; border-color: #a09080; }
 .move-btn .move-name { display: block; margin-bottom: 3px; }
-
-.move-meta {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.move-type-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
+.move-meta { display: flex; gap: 4px; align-items: center; }
+.move-type-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .move-pp { font-size: 5px; color: #5a5040; }
 .move-power-label { font-size: 5px; color: #2a5580; }
+
+/* Back button */
+.back-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  padding: 4px 8px;
+  background: #3d3d5c;
+  color: #94a3b8;
+  border: 1px solid #4d4d6c;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.back-btn:hover { background: #4d4d6c; color: #e2e8f0; }
+
+/* ─── BAG / MOCHILA ─── */
+#bag-panel { display: none; }
+#bag-panel.visible { display: block; }
+#bag-header {
+  font-size: 6px; color: #f97316;
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 6px; padding-left: 2px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+#bag-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+.item-btn {
+  padding: 7px 6px;
+  border: 2px solid #7b6030;
+  background: #2e2010;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  color: #fde68a;
+  transition: all 0.1s;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1.6;
+}
+.item-btn:hover:not(:disabled) {
+  background: #3e3020;
+  border-color: #f97316;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(249,115,22,0.3);
+}
+.item-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.item-btn .item-icon { font-size: 12px; }
+.item-btn .item-name { font-size: 6px; color: #fde68a; }
+.item-btn .item-count { font-size: 5px; color: #f97316; }
+.item-btn .item-desc  { font-size: 5px; color: #b08040; }
 
 /* ─── TYPE COLORS ─── */
 .type-normal    { background: #a0a0a0; }
@@ -428,7 +373,7 @@ body {
 .type-poison    { background: #a040a0; }
 .type-fairy     { background: #ee99ac; }
 
-/* ─── BOTTOM CONTROLS ─── */
+/* ─── BOTTOM BAR ─── */
 #bottom-bar {
   display: flex;
   justify-content: space-between;
@@ -437,44 +382,13 @@ body {
   background: #252538;
   border-top: 2px solid #111;
 }
-
-.run-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
-  padding: 6px 10px;
-  background: #3d3d5c;
-  color: #94a3b8;
-  border: 2px solid #4d4d6c;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.run-btn:hover {
-  background: #4d4d6c;
-  color: #cbd5e1;
-}
-
 .dpad {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: 1px;
-  width: 40px; height: 40px;
-  opacity: 0.3;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr;
+  gap: 1px; width: 40px; height: 40px; opacity: 0.3;
 }
-
-.dpad > div {
-  background: #3d3d5c;
-  border-radius: 2px;
-}
-
-.dpad > div:nth-child(2),
-.dpad > div:nth-child(4),
-.dpad > div:nth-child(6),
-.dpad > div:nth-child(8) {
-  background: #4d4d6c;
-}
+.dpad > div { background: #3d3d5c; border-radius: 2px; }
+.dpad > div:nth-child(2), .dpad > div:nth-child(4),
+.dpad > div:nth-child(6), .dpad > div:nth-child(8) { background: #4d4d6c; }
 
 /* ─── BATTLE ANIMATIONS ─── */
 @keyframes shake-x {
@@ -484,58 +398,52 @@ body {
   60%       { transform: translateX(-4px); }
   80%       { transform: translateX(4px); }
 }
-
 @keyframes flash-white {
   0%, 100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
   50%       { filter: drop-shadow(0 0 20px white) brightness(10); }
 }
-
 @keyframes faint-fall {
   to { transform: translateY(60px); opacity: 0; }
 }
-
 @keyframes enter-slide-right {
   from { transform: translateX(80px); opacity: 0; }
   to   { transform: translateX(0); opacity: 1; }
 }
-
 @keyframes enter-slide-left {
   from { transform: translateX(-80px); opacity: 0; }
   to   { transform: translateX(0); opacity: 1; }
 }
-
 @keyframes bounce-in {
   0%   { transform: scale(0.5); opacity: 0; }
   60%  { transform: scale(1.1); opacity: 1; }
   100% { transform: scale(1); }
 }
-
 @keyframes attack-lunge-right {
   0%   { transform: translateX(0); }
   40%  { transform: translateX(30px); }
   100% { transform: translateX(0); }
 }
-
 @keyframes attack-lunge-left {
   0%   { transform: translateX(0); }
   40%  { transform: translateX(-30px); }
   100% { transform: translateX(0); }
 }
-
 @keyframes hit-flash {
   0%, 100% { opacity: 1; }
-  25%, 75% { opacity: 0; }
-  50%       { opacity: 0.3; }
+  25%, 75%  { opacity: 0; }
+  50%        { opacity: 0.3; }
 }
-
 @keyframes status-pulse {
   0%, 100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
   50%       { filter: drop-shadow(0 0 15px rgba(168,85,247,0.8)); }
 }
-
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-4px); }
+}
+@keyframes heal-glow {
+  0%, 100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
+  50%       { filter: drop-shadow(0 0 15px rgba(56,217,128,0.9)); }
 }
 
 .anim-enter-enemy  { animation: enter-slide-right 0.5s ease forwards; }
@@ -547,152 +455,100 @@ body {
 .anim-faint        { animation: faint-fall 0.5s ease forwards; }
 .anim-status       { animation: status-pulse 0.5s 4; }
 .anim-float        { animation: float 2s ease-in-out infinite; }
+.anim-heal         { animation: heal-glow 0.4s 3; }
 
 /* ─── DAMAGE POPUP ─── */
 .dmg-popup {
-  position: absolute;
-  font-size: 10px;
-  font-weight: bold;
-  color: white;
-  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
-  pointer-events: none;
-  animation: dmg-float 1.2s ease forwards;
-  z-index: 50;
+  position: absolute; font-size: 10px; font-weight: bold;
+  color: white; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
+  pointer-events: none; animation: dmg-float 1.2s ease forwards; z-index: 50;
 }
-
-.dmg-popup.super { color: var(--gold); font-size: 13px; }
+.dmg-popup.super    { color: var(--gold); font-size: 13px; }
 .dmg-popup.not-very { color: #94a3b8; font-size: 8px; }
-.dmg-popup.heal { color: #38d980; }
-
+.dmg-popup.heal     { color: #38d980; }
 @keyframes dmg-float {
   0%   { transform: translateY(0); opacity: 1; }
   70%  { transform: translateY(-30px); opacity: 1; }
   100% { transform: translateY(-45px); opacity: 0; }
 }
 
-/* ─── EFFECTIVENESS BANNER ─── */
+/* ─── EFFECT BANNER ─── */
 #effect-banner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background: rgba(0,0,0,0.85);
-  color: white;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 7px;
-  white-space: nowrap;
-  z-index: 100;
+  background: rgba(0,0,0,0.85); color: white;
+  padding: 6px 14px; border-radius: 20px; font-size: 7px;
+  white-space: nowrap; z-index: 100;
   transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
   border: 2px solid rgba(255,255,255,0.2);
   pointer-events: none;
 }
-
-#effect-banner.show {
-  transform: translate(-50%, -50%) scale(1);
-}
+#effect-banner.show { transform: translate(-50%, -50%) scale(1); }
 
 /* ─── LOADING ─── */
 #loading-overlay {
-  position: fixed;
-  inset: 0;
-  background: #0d0d1a;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  transition: opacity 0.5s;
+  position: fixed; inset: 0; background: #0d0d1a;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 999; transition: opacity 0.5s;
 }
-
 .loading-ball {
-  width: 60px; height: 60px;
-  border-radius: 50%;
+  width: 60px; height: 60px; border-radius: 50%;
   background: linear-gradient(180deg, #ef4444 0%, #ef4444 50%, white 50%, white 53%, #1a1a2e 53%);
-  border: 3px solid #1a1a2e;
-  box-shadow: 0 0 30px rgba(239,68,68,0.5);
+  border: 3px solid #1a1a2e; box-shadow: 0 0 30px rgba(239,68,68,0.5);
   animation: spin-ball 1s linear infinite, pulse-ball 1s ease-in-out infinite;
   position: relative;
 }
-
 .loading-ball::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  content: ''; position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: white;
-  border: 3px solid #1a1a2e;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: white; border: 3px solid #1a1a2e;
 }
-
-@keyframes spin-ball {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
+@keyframes spin-ball  { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes pulse-ball {
   0%, 100% { box-shadow: 0 0 30px rgba(239,68,68,0.5); }
   50%       { box-shadow: 0 0 60px rgba(239,68,68,0.9); }
 }
-
 #loading-text {
-  margin-top: 16px;
-  font-size: 8px;
-  color: #6b7aa1;
-  letter-spacing: 2px;
+  margin-top: 16px; font-size: 8px; color: #6b7aa1; letter-spacing: 2px;
   animation: fade-text 0.8s ease-in-out infinite alternate;
 }
-
-@keyframes fade-text {
-  from { opacity: 0.4; }
-  to   { opacity: 1; }
-}
+@keyframes fade-text { from { opacity: 0.4; } to { opacity: 1; } }
 
 /* ─── WIN/LOSE OVERLAY ─── */
 #result-overlay {
-  display: none;
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(2px);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 12px;
+  display: none; position: absolute; inset: 0;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(2px);
+  z-index: 200; align-items: center; justify-content: center;
+  flex-direction: column; gap: 12px;
 }
-
 #result-overlay.show { display: flex; }
-
-#result-title {
-  font-size: 16px;
-  text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-  animation: bounce-in 0.4s cubic-bezier(0.34,1.56,0.64,1);
-}
-
-#result-sub {
-  font-size: 7px;
-  color: #cbd5e1;
-  text-align: center;
-  line-height: 2;
-}
-
+#result-title { font-size: 16px; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); animation: bounce-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+#result-sub { font-size: 7px; color: #cbd5e1; text-align: center; line-height: 2; }
 #result-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  padding: 10px 20px;
-  background: var(--gold);
-  color: #1a1a2e;
-  border: 3px solid #d4a800;
-  border-radius: 4px;
-  cursor: pointer;
-  animation: pulse-pip 1.5s infinite;
-  margin-top: 4px;
+  font-family: 'Press Start 2P', monospace; font-size: 8px;
+  padding: 10px 20px; background: var(--gold); color: #1a1a2e;
+  border: 3px solid #d4a800; border-radius: 4px;
+  cursor: pointer; animation: pulse-pip 1.5s infinite; margin-top: 4px;
 }
 
-/* ─── SCROLLBAR ─── */
+/* ─── ITEM USE ANIMATION ─── */
+@keyframes item-use-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.item-use-bubble {
+  position: absolute; top: 40%; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(249,115,22,0.9);
+  color: white; padding: 6px 12px; border-radius: 12px;
+  font-size: 8px; z-index: 100;
+  animation: item-use-pop 0.3s ease forwards;
+  pointer-events: none;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #3d3d5c; border-radius: 2px; }
@@ -782,12 +638,44 @@ body {
       <div id="textbox">Preparando torneio...<span id="cursor"></span></div>
     </div>
 
-    <!-- Moves -->
-    <div id="moves-panel">
-      <div id="moves-header">► AÇÕES</div>
-      <div id="moves"></div>
-    </div>
+    <!-- Action Panel -->
+    <div id="action-panel">
 
+      <!-- Main menu: Lutar / Mochila / Fugir -->
+      <div id="main-actions">
+        <button class="action-btn btn-fight" id="btn-fight" onclick="showMoves()" disabled>
+          <span class="btn-icon">⚔️</span>
+          <span>LUTAR</span>
+        </button>
+        <button class="action-btn btn-bag" id="btn-bag" onclick="showBag()" disabled>
+          <span class="btn-icon">🎒</span>
+          <span>MOCHILA</span>
+        </button>
+        <button class="action-btn btn-run" id="btn-run" onclick="tryRun()" disabled>
+          <span class="btn-icon">💨</span>
+          <span>FUGIR</span>
+        </button>
+      </div>
+
+      <!-- Moves submenu -->
+      <div id="moves-panel">
+        <div id="moves-header">
+          <span>⚔ GOLPES</span>
+          <button class="back-btn" onclick="showMainMenu()">◀ VOLTAR</button>
+        </div>
+        <div id="moves"></div>
+      </div>
+
+      <!-- Bag submenu -->
+      <div id="bag-panel">
+        <div id="bag-header">
+          <span>🎒 MOCHILA</span>
+          <button class="back-btn" onclick="showMainMenu()">◀ VOLTAR</button>
+        </div>
+        <div id="bag-items"></div>
+      </div>
+
+    </div>
   </div>
 
   <!-- Bottom bar -->
@@ -800,7 +688,9 @@ body {
     <div style="font-size:7px;color:#4d4d6c;text-align:center;line-height:1.8">
       DAILY<br>TOURNAMENT
     </div>
-    <button class="run-btn" onclick="tryRun()">✕ FUGIR</button>
+    <div style="font-size:6px;color:#4d4d6c;text-align:right;line-height:2">
+      A B<br>SELECT START
+    </div>
   </div>
 </div>
 
@@ -813,11 +703,132 @@ let playerTurn = false;
 let battleNumber = 1;
 let maxBattles = 3;
 let tournamentOver = false;
-let resultAction = null; // 'next' | 'retry'
+let resultAction = null;
+let currentPanel = 'main'; // 'main' | 'moves' | 'bag'
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ');
 const rng = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+// ─────────────────────────────────────────
+//  BAG / INVENTORY
+// ─────────────────────────────────────────
+const bagItems = [
+  { id: 'potion',    name: 'Poção',       icon: '🧪', count: 3, heal: 20,  desc: 'Cura 20 HP',     type: 'heal' },
+  { id: 'superpotion',name: 'Super Poção',icon: '💊', count: 2, heal: 50,  desc: 'Cura 50 HP',     type: 'heal' },
+  { id: 'fullheal',  name: 'Cura Total',  icon: '✨', count: 1, heal: 0,   desc: 'Cura status',    type: 'status' },
+  { id: 'antidote',  name: 'Antídoto',    icon: '🌿', count: 2, heal: 0,   desc: 'Cura veneno',    type: 'antidote' },
+];
+
+function renderBag() {
+  const div = document.getElementById('bag-items');
+  div.innerHTML = '';
+  bagItems.forEach((item, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'item-btn';
+    btn.disabled = item.count <= 0;
+    btn.innerHTML = `
+      <span class="item-icon">${item.icon}</span>
+      <span class="item-name">${item.name}</span>
+      <span class="item-count">x${item.count}</span>
+      <span class="item-desc">${item.desc}</span>`;
+    btn.onclick = () => useItem(i);
+    div.appendChild(btn);
+  });
+}
+
+async function useItem(idx) {
+  if (!playerTurn || tournamentOver) return;
+  const item = bagItems[idx];
+  if (item.count <= 0) return;
+
+  item.count--;
+  playerTurn = false;
+  toggleMainActions(false);
+  showMainMenu();
+
+  // Show item use bubble
+  const bubble = document.createElement('div');
+  bubble.className = 'item-use-bubble';
+  bubble.textContent = `${item.icon} ${item.name}!`;
+  document.getElementById('arena').appendChild(bubble);
+  await sleep(800);
+  bubble.remove();
+
+  const s1 = document.getElementById('sprite1');
+
+  if (item.type === 'heal') {
+    const before = p1.hp;
+    p1.hp = Math.min(p1.maxHp, p1.hp + item.heal);
+    const actual = p1.hp - before;
+    s1.classList.add('anim-heal');
+    await sleep(800);
+    s1.classList.remove('anim-heal');
+    updateHP(p1, 1);
+    spawnDmgPopup('sprite1', actual, 'heal');
+    await log(`${p1.name} recuperou ${actual} HP!`);
+  } else if (item.type === 'status') {
+    if (p1.status && p1.status !== 'none') {
+      p1.status = null;
+      updateStatusBadge(p1, 1);
+      s1.classList.add('anim-heal');
+      await sleep(600);
+      s1.classList.remove('anim-heal');
+      await log(`Status de ${p1.name} foi curado!`);
+    } else {
+      await log(`${p1.name} não tem status!`);
+      item.count++; // refund
+    }
+  } else if (item.type === 'antidote') {
+    if (p1.status === 'poison' || p1.status === 'toxic') {
+      p1.status = null;
+      updateStatusBadge(p1, 1);
+      await log(`${p1.name} foi curado do veneno!`);
+    } else {
+      await log(`${p1.name} não está envenenado!`);
+      item.count++;
+    }
+  }
+
+  // Enemy attacks after item use
+  const eMove = enemyAI();
+  const secondSkip = await applyStatusDamage(p2, 2);
+  if (p2.hp > 0 && !secondSkip) {
+    await executeMove(p2, p1, eMove, 2, 1);
+    if (await endCheck()) return;
+  }
+
+  await log(`O que ${p1.name} deve fazer?`, 800);
+  playerTurn = true;
+  toggleMainActions(true);
+}
+
+// ─────────────────────────────────────────
+//  PANEL SWITCHING
+// ─────────────────────────────────────────
+function showMainMenu() {
+  currentPanel = 'main';
+  document.getElementById('main-actions').style.display = 'grid';
+  document.getElementById('moves-panel').classList.remove('visible');
+  document.getElementById('bag-panel').classList.remove('visible');
+}
+
+function showMoves() {
+  if (!playerTurn) return;
+  currentPanel = 'moves';
+  document.getElementById('main-actions').style.display = 'none';
+  document.getElementById('moves-panel').classList.add('visible');
+  document.getElementById('bag-panel').classList.remove('visible');
+}
+
+function showBag() {
+  if (!playerTurn) return;
+  currentPanel = 'bag';
+  renderBag();
+  document.getElementById('main-actions').style.display = 'none';
+  document.getElementById('bag-panel').classList.add('visible');
+  document.getElementById('moves-panel').classList.remove('visible');
+}
 
 // ─────────────────────────────────────────
 //  TYPE CHART
@@ -842,14 +853,8 @@ const typeChart = {
   poison:   {grass:2, fairy:2, poison:.5, ground:.5, rock:.5, ghost:.5},
   fairy:    {fighting:2, dragon:2, dark:2, fire:.5, poison:.5, steel:.5}
 };
+function typeEffect(atkType, defType) { return typeChart[atkType]?.[defType] ?? 1; }
 
-function typeEffect(atkType, defType) {
-  return typeChart[atkType]?.[defType] ?? 1;
-}
-
-// ─────────────────────────────────────────
-//  TYPE COLORS
-// ─────────────────────────────────────────
 const typeColors = {
   normal:'#a0a0a0', fire:'#f08030', water:'#6890f0', grass:'#78c850',
   electric:'#f8d030', ice:'#98d8d8', fighting:'#c03028', ground:'#e0c068',
@@ -886,11 +891,9 @@ async function typeText(text, delay = 1600) {
 async function getPokemon(id) {
   const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
   const d = await r.json();
-
   const stats = {};
   d.stats.forEach(s => stats[s.stat.name] = s.base_stat);
 
-  // Pick 4 moves, prefer damage moves
   let allMoves = [...d.moves];
   shuffle(allMoves);
   const picked = [];
@@ -919,7 +922,6 @@ async function getPokemon(id) {
     } catch(e) { continue; }
   }
 
-  // Fallback if not enough moves
   while (moveData.length < 4) {
     moveData.push({ name: 'Tackle', power: 40, accuracy: 100, type: 'normal',
       pp: 35, maxPP: 35, damage: true, damageClass: 'physical',
@@ -927,7 +929,6 @@ async function getPokemon(id) {
   }
 
   const hp = stats['hp'] * 2 + 10;
-
   return {
     name: capitalize(d.name),
     type: d.types[0].type.name,
@@ -942,7 +943,7 @@ async function getPokemon(id) {
     status: null,
     statusTurns: 0,
     spriteFront: `https://play.pokemonshowdown.com/sprites/ani/${d.name}.gif`,
-    spriteBack: `https://play.pokemonshowdown.com/sprites/ani-back/${d.name}.gif`,
+    spriteBack:  `https://play.pokemonshowdown.com/sprites/ani-back/${d.name}.gif`,
     cry: `https://play.pokemonshowdown.com/audio/cries/${d.name}.mp3`,
     spriteId: null
   };
@@ -953,29 +954,21 @@ async function getPokemon(id) {
 // ─────────────────────────────────────────
 function updateHP(poke, idx) {
   const pct = Math.max(0, (poke.hp / poke.maxHp) * 100);
-  const bar = document.getElementById(`hp${idx}`);
+  const bar  = document.getElementById(`hp${idx}`);
   const nums = document.getElementById(`hp${idx}-nums`);
-
   bar.style.width = pct + '%';
   bar.style.background = pct > 50 ? 'var(--green-hp)' : pct > 20 ? 'var(--yellow-hp)' : 'var(--red-hp)';
   nums.textContent = `${Math.max(0, poke.hp)} / ${poke.maxHp}`;
 }
-
-function updateBothHP() {
-  updateHP(p1, 1);
-  updateHP(p2, 2);
-}
+function updateBothHP() { updateHP(p1, 1); updateHP(p2, 2); }
 
 // ─────────────────────────────────────────
 //  STATUS
 // ─────────────────────────────────────────
 function updateStatusBadge(poke, idx) {
   const badge = document.getElementById(`status${idx}`);
-  if (!poke.status || poke.status === 'none') {
-    badge.style.display = 'none';
-    return;
-  }
-  const labels = { poison:'PSN', burn:'BRN', paralysis:'PAR', sleep:'SLP', freeze:'FRZ', toxic:'PSN' };
+  if (!poke.status || poke.status === 'none') { badge.style.display = 'none'; return; }
+  const labels  = { poison:'PSN', burn:'BRN', paralysis:'PAR', sleep:'SLP', freeze:'FRZ', toxic:'PSN' };
   const classes = { poison:'status-psn', burn:'status-brn', paralysis:'status-par', sleep:'status-slp', freeze:'status-frz', toxic:'status-psn' };
   badge.style.display = 'inline-block';
   badge.textContent = labels[poke.status] || poke.status.toUpperCase().slice(0,3);
@@ -988,19 +981,17 @@ async function applyStatusDamage(poke, idx) {
   if (poke.status === 'sleep') {
     poke.statusTurns = (poke.statusTurns || 0) + 1;
     if (poke.statusTurns >= rng(2, 5)) {
-      poke.status = null;
-      updateStatusBadge(poke, idx);
+      poke.status = null; updateStatusBadge(poke, idx);
       await log(`${poke.name} acordou!`);
     } else {
       await log(`${poke.name} está dormindo...`);
-      return true; // skip turn
+      return true;
     }
   }
 
   if (poke.status === 'freeze') {
     if (Math.random() < 0.2) {
-      poke.status = null;
-      updateStatusBadge(poke, idx);
+      poke.status = null; updateStatusBadge(poke, idx);
       await log(`${poke.name} descongelou!`);
     } else {
       await log(`${poke.name} está congelado!`);
@@ -1015,8 +1006,7 @@ async function applyStatusDamage(poke, idx) {
 
   if (poke.status === 'poison' || poke.status === 'toxic') {
     const dmg = Math.floor(poke.maxHp / 8);
-    poke.hp -= dmg;
-    updateHP(poke, idx);
+    poke.hp -= dmg; updateHP(poke, idx);
     spawnDmgPopup(idx === 1 ? 'sprite1' : 'sprite2', dmg, '');
     await log(`${poke.name} sofreu dano de veneno!`);
     if (poke.hp <= 0) return false;
@@ -1024,8 +1014,7 @@ async function applyStatusDamage(poke, idx) {
 
   if (poke.status === 'burn') {
     const dmg = Math.floor(poke.maxHp / 16);
-    poke.hp -= dmg;
-    updateHP(poke, idx);
+    poke.hp -= dmg; updateHP(poke, idx);
     spawnDmgPopup(idx === 1 ? 'sprite1' : 'sprite2', dmg, '');
     await log(`${poke.name} sofreu dano de queimadura!`);
   }
@@ -1039,9 +1028,9 @@ async function applyStatusDamage(poke, idx) {
 function spawnDmgPopup(spriteId, dmg, cls = '') {
   const el = document.getElementById(spriteId);
   if (!el) return;
-  const rect = el.getBoundingClientRect();
+  const rect  = el.getBoundingClientRect();
   const arena = document.getElementById('arena').getBoundingClientRect();
-  const pop = document.createElement('div');
+  const pop   = document.createElement('div');
   pop.className = `dmg-popup ${cls}`;
   pop.textContent = cls === 'heal' ? `+${dmg}` : `-${dmg}`;
   pop.style.left = (rect.left - arena.left + rect.width/2 - 20) + 'px';
@@ -1051,13 +1040,11 @@ function spawnDmgPopup(spriteId, dmg, cls = '') {
 }
 
 // ─────────────────────────────────────────
-//  EFFECTIVENESS BANNER
+//  EFFECT BANNER
 // ─────────────────────────────────────────
 async function showEffectBanner(text, color) {
   const b = document.getElementById('effect-banner');
-  b.textContent = text;
-  b.style.color = color;
-  b.style.borderColor = color;
+  b.textContent = text; b.style.color = color; b.style.borderColor = color;
   b.classList.add('show');
   await sleep(900);
   b.classList.remove('show');
@@ -1071,27 +1058,14 @@ function calcDamage(attacker, defender, move) {
   const lvl = 50;
   const atkStat = move.damageClass === 'special' ? attacker.spAtk : attacker.atk;
   const defStat = move.damageClass === 'special' ? defender.spDef : defender.def;
-
-  // Gen formula simplified
   let dmg = Math.floor((((2 * lvl / 5 + 2) * move.power * atkStat / defStat) / 50) + 2);
-
-  // STAB
   if (attacker.types.includes(move.type)) dmg = Math.floor(dmg * 1.5);
-
-  // Type effectiveness (check all defender types)
   let eff = 1;
-  for (const defType of (defender.types || [defender.type])) {
-    eff *= typeEffect(move.type, defType);
-  }
+  for (const defType of (defender.types || [defender.type])) eff *= typeEffect(move.type, defType);
   dmg = Math.floor(dmg * eff);
-
-  // Burn halves physical
   if (attacker.status === 'burn' && move.damageClass === 'physical') dmg = Math.floor(dmg / 2);
-
-  // Random variance 85–100%
   dmg = Math.floor(dmg * rng(85, 100) / 100);
   if (dmg < 1) dmg = 1;
-
   return { dmg, eff };
 }
 
@@ -1100,61 +1074,42 @@ function calcDamage(attacker, defender, move) {
 // ─────────────────────────────────────────
 async function executeMove(attacker, defender, move, atkIdx, defIdx) {
   if (attacker.hp <= 0) return;
-
   const atkSprite = document.getElementById(`sprite${atkIdx}`);
   const defSprite = document.getElementById(`sprite${defIdx}`);
 
   await log(`${attacker.name} usou ${move.name}!`);
   move.pp = Math.max(0, move.pp - 1);
-  renderMoves(); // update PP display
+  renderMoves();
 
-  // Accuracy check
   if (Math.random() * 100 > (move.accuracy || 100)) {
     await log(`O ataque de ${attacker.name} errou!`, 1200);
     return;
   }
 
-  // Play cry
   try { new Audio(attacker.cry).play().catch(()=>{}); } catch(e) {}
 
-  // Attack lunge animation
   atkSprite.classList.add(atkIdx === 1 ? 'anim-attack-p' : 'anim-attack-e');
   await sleep(320);
   atkSprite.classList.remove('anim-attack-p', 'anim-attack-e');
 
   if (move.damage && move.power > 0) {
     const { dmg, eff } = calcDamage(attacker, defender, move);
-
-    // Hit animation
     defSprite.classList.add('anim-hit');
     await sleep(500);
     defSprite.classList.remove('anim-hit');
-
     defender.hp -= dmg;
     updateHP(defender, defIdx);
-
     const cls = eff > 1 ? 'super' : eff < 1 ? 'not-very' : '';
     spawnDmgPopup(`sprite${defIdx}`, dmg, cls);
-
-    if (eff === 0) {
-      await showEffectBanner('NÃO AFETA...', '#64748b');
-    } else if (eff >= 2) {
-      await showEffectBanner('SUPER EFETIVO!', '#f5c518');
-    } else if (eff < 1) {
-      await showEffectBanner('Pouco efetivo...', '#94a3b8');
-    }
-
-    // Critical hit chance 6.25%
-    if (Math.random() < 0.0625) {
-      await log(`Acerto crítico!`, 900);
-    }
+    if (eff === 0)       await showEffectBanner('NÃO AFETA...', '#64748b');
+    else if (eff >= 2)   await showEffectBanner('SUPER EFETIVO!', '#f5c518');
+    else if (eff < 1)    await showEffectBanner('Pouco efetivo...', '#94a3b8');
+    if (Math.random() < 0.0625) await log(`Acerto crítico!`, 900);
 
   } else if (move.effect && move.effect !== 'none') {
-    // Status move
     if (!defender.status || defender.status === 'none') {
       if (Math.random() * 100 <= (move.effectChance || 100)) {
-        defender.status = move.effect;
-        defender.statusTurns = 0;
+        defender.status = move.effect; defender.statusTurns = 0;
         updateStatusBadge(defender, defIdx);
         defSprite.classList.add('anim-status');
         await sleep(2000);
@@ -1177,7 +1132,6 @@ async function executeMove(attacker, defender, move, atkIdx, defIdx) {
     await log(`Mas não aconteceu nada...`, 1000);
   }
 
-  // Self-heal
   if (move.heal > 0) {
     const healAmt = Math.floor(attacker.maxHp * move.heal / 100);
     attacker.hp = Math.min(attacker.maxHp, attacker.hp + healAmt);
@@ -1192,19 +1146,15 @@ async function executeMove(attacker, defender, move, atkIdx, defIdx) {
 function enemyAI() {
   const available = p2.moves.filter(m => m.pp > 0);
   if (!available.length) return { name: 'Struggle', power: 50, accuracy: 100, type: 'normal', damage: true, damageClass: 'physical', pp: 99, maxPP: 99, effect: null, effectChance: 0, heal: 0, priority: 0 };
-
-  // Score each move
-  let best = available[0];
-  let bestScore = -Infinity;
+  let best = available[0], bestScore = -Infinity;
   for (const m of available) {
     let score = 0;
     if (m.damage && m.power > 0) {
       score = m.power * typeEffect(m.type, p1.type);
       if (p2.types.includes(m.type)) score *= 1.5;
     } else if (m.effect && m.effect !== 'none' && (!p1.status || p1.status === 'none')) {
-      score = 60; // status moves decent value
+      score = 60;
     }
-    // slight randomness to not be perfectly optimal
     score += Math.random() * 20 - 10;
     if (score > bestScore) { bestScore = score; best = m; }
   }
@@ -1217,19 +1167,18 @@ function enemyAI() {
 async function playTurn(moveIndex) {
   if (!playerTurn) return;
   playerTurn = false;
-  toggleButtons(false);
+  toggleMainActions(false);
+  showMainMenu();
 
   const pMove = p1.moves[moveIndex];
   if (!pMove || pMove.pp <= 0) {
     await log('Sem PP! Escolha outro golpe.', 1000);
     playerTurn = true;
-    toggleButtons(true);
+    toggleMainActions(true);
     return;
   }
 
   const eMove = enemyAI();
-
-  // Determine order by priority then speed
   const pFirst = (pMove.priority > eMove.priority) ||
     (pMove.priority === eMove.priority && p1.speed >= p2.speed);
 
@@ -1237,10 +1186,8 @@ async function playTurn(moveIndex) {
     ? [p1, pMove, 1, p2, eMove, 2]
     : [p2, eMove, 2, p1, pMove, 1];
 
-  // Status damage before turn
   const firstSkip = await applyStatusDamage(first, firstIdx);
   if (first.hp <= 0) { await endCheck(); return; }
-
   if (!firstSkip) {
     await executeMove(first, second, firstMove, firstIdx, secondIdx);
     if (await endCheck()) return;
@@ -1248,7 +1195,6 @@ async function playTurn(moveIndex) {
 
   const secondSkip = await applyStatusDamage(second, secondIdx);
   if (second.hp <= 0) { await endCheck(); return; }
-
   if (!secondSkip) {
     await executeMove(second, first, secondMove, secondIdx, firstIdx);
     if (await endCheck()) return;
@@ -1256,7 +1202,7 @@ async function playTurn(moveIndex) {
 
   await log(`O que ${p1.name} deve fazer?`, 800);
   playerTurn = true;
-  toggleButtons(true);
+  toggleMainActions(true);
 }
 
 async function endCheck() {
@@ -1282,7 +1228,6 @@ async function handleWin() {
   saveTournament(true);
   battleNumber++;
   updateTournamentPips();
-
   if (battleNumber <= maxBattles) {
     showResult('🌟 VITÓRIA! 🌟', `Batalha ${battleNumber-1} vencida!\nPróxima batalha preparando...`, 'PRÓXIMA BATALHA', 'next');
   } else {
@@ -1299,25 +1244,21 @@ async function handleLoss() {
 
 function showResult(title, sub, btnText, action) {
   resultAction = action;
-  const overlay = document.getElementById('result-overlay');
   document.getElementById('result-title').textContent = title;
   document.getElementById('result-sub').textContent = sub;
   document.getElementById('result-btn').textContent = btnText;
-  overlay.classList.add('show');
+  document.getElementById('result-overlay').classList.add('show');
   const isWin = action === 'next' || (action === 'done' && battleNumber > maxBattles);
   document.getElementById('result-title').style.color = isWin ? '#f5c518' : '#ef4444';
 }
 
-function hideResult() {
-  document.getElementById('result-overlay').classList.remove('show');
-}
+function hideResult() { document.getElementById('result-overlay').classList.remove('show'); }
 
 function handleResultBtn() {
   if (resultAction === 'next') {
     hideResult();
     setTimeout(startBattle, 400);
   }
-  // 'done' – just leave visible
 }
 
 // ─────────────────────────────────────────
@@ -1325,8 +1266,12 @@ function handleResultBtn() {
 // ─────────────────────────────────────────
 async function tryRun() {
   if (!playerTurn || tournamentOver) return;
+  playerTurn = false;
+  toggleMainActions(false);
   if (Math.random() < 0.5) {
     await log(`${p1.name} não conseguiu fugir!`, 1200);
+    playerTurn = true;
+    toggleMainActions(true);
   } else {
     await log(`Você fugiu da batalha!`, 1200);
     await handleLoss();
@@ -1344,7 +1289,7 @@ function renderMoves() {
     const btn = document.createElement('button');
     btn.className = 'move-btn';
     const color = typeColors[m.type] || '#a0a0a0';
-    const icon = m.damage ? '⚔' : '✦';
+    const icon  = m.damage ? '⚔' : '✦';
     btn.innerHTML = `
       <span class="move-name">${icon} ${m.name}</span>
       <div class="move-meta">
@@ -1352,13 +1297,17 @@ function renderMoves() {
         <span class="move-pp">PP ${m.pp}/${m.maxPP}</span>
         ${m.power ? `<span class="move-power-label">· POW ${m.power}</span>` : ''}
       </div>`;
-    btn.disabled = true;
+    btn.disabled = !playerTurn;
     btn.onclick = () => playTurn(i);
     div.appendChild(btn);
   });
 }
 
-function toggleButtons(enabled) {
+function toggleMainActions(enabled) {
+  ['btn-fight','btn-bag','btn-run'].forEach(id => {
+    document.getElementById(id).disabled = !enabled;
+  });
+  // also toggle move buttons in case visible
   document.querySelectorAll('.move-btn').forEach(b => b.disabled = !enabled);
 }
 
@@ -1371,7 +1320,7 @@ function getTournamentData() {
 
 function saveTournament(win) {
   const today = new Date().toDateString();
-  const data = getTournamentData();
+  const data  = getTournamentData();
   if (!data[today]) data[today] = { wins: 0, battles: 0 };
   data[today].battles++;
   if (win) data[today].wins++;
@@ -1381,14 +1330,12 @@ function saveTournament(win) {
 
 function updateTournamentPips() {
   const today = new Date().toDateString();
-  const data = getTournamentData();
-  const d = data[today] || { wins: 0, battles: 0 };
-
+  const data  = getTournamentData();
+  const d     = data[today] || { wins: 0, battles: 0 };
   for (let i = 1; i <= 3; i++) {
     const pip = document.getElementById(`pip${i}`);
     pip.className = 'battle-pip';
     if (i < battleNumber) {
-      // completed battles
       if (i <= d.wins) pip.classList.add('won');
       else pip.classList.add('lost');
     } else if (i === battleNumber && !tournamentOver) {
@@ -1413,11 +1360,12 @@ function shuffle(arr) {
 // ─────────────────────────────────────────
 async function startBattle() {
   playerTurn = false;
+  showMainMenu();
+
   const overlay = document.getElementById('loading-overlay');
   overlay.style.opacity = '1';
   overlay.style.display = 'flex';
 
-  // Reset sprites
   ['sprite1','sprite2'].forEach(id => {
     const el = document.getElementById(id);
     el.className = 'sprite';
@@ -1427,10 +1375,10 @@ async function startBattle() {
 
   document.getElementById('textbox').innerHTML = 'Procurando oponente...<span id="cursor"></span>';
   document.getElementById('moves').innerHTML = '';
+  toggleMainActions(false);
 
-  // Random Gen 1
   const id1 = rng(1, 151);
-  let id2 = rng(1, 151);
+  let id2   = rng(1, 151);
   while (id2 === id1) id2 = rng(1, 151);
 
   document.getElementById('loading-text').textContent = 'CARREGANDO POKÉMON...';
@@ -1438,11 +1386,9 @@ async function startBattle() {
   p1.spriteId = 'sprite1';
   p2.spriteId = 'sprite2';
 
-  // Fade out loading
   overlay.style.opacity = '0';
   setTimeout(() => { overlay.style.display = 'none'; }, 500);
 
-  // Set names and types
   document.getElementById('p1name').textContent = p1.name;
   document.getElementById('p2name').textContent = p2.name;
 
@@ -1453,7 +1399,6 @@ async function startBattle() {
   p2TypeEl.textContent = p2.type.toUpperCase();
   p2TypeEl.className = `poke-type-badge type-${p2.type}`;
 
-  // Sprites
   const s1 = document.getElementById('sprite1');
   const s2 = document.getElementById('sprite2');
   s1.src = p1.spriteBack;
@@ -1463,15 +1408,12 @@ async function startBattle() {
   setTimeout(() => { s1.classList.remove('anim-enter-player'); s1.classList.add('anim-float'); }, 600);
   setTimeout(() => { s2.classList.remove('anim-enter-enemy'); }, 600);
 
-  // Status badges
   updateStatusBadge(p1, 1);
   updateStatusBadge(p2, 2);
-
   updateBothHP();
   renderMoves();
   updateTournamentPips();
 
-  // Cry + intro messages
   try { new Audio(p2.cry).play().catch(()=>{}); } catch(e) {}
   await typeText(`Um ${p2.name} selvagem apareceu!`);
   try { new Audio(p1.cry).play().catch(()=>{}); } catch(e) {}
@@ -1479,7 +1421,7 @@ async function startBattle() {
   await log(`O que ${p1.name} deve fazer?`, 800);
 
   playerTurn = true;
-  toggleButtons(true);
+  toggleMainActions(true);
 }
 
 // ─────────────────────────────────────────
