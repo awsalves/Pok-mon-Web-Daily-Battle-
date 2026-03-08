@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pokémon Daily Tournament</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
-
 <style>
 :root {
   --cream: #f5f0dc;
@@ -21,14 +20,12 @@
   --gold: #f5c518;
   --shadow: rgba(0,0,0,0.6);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
   background: #0d0d1a;
   background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(74,158,255,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.05) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 50%, rgba(74,158,255,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.06) 0%, transparent 50%);
   font-family: 'Press Start 2P', monospace;
   color: white;
   min-height: 100vh;
@@ -39,112 +36,188 @@ body {
 }
 
 /* ─── HEADER ─── */
-#header { text-align: center; margin-bottom: 16px; }
+#header { text-align: center; margin-bottom: 12px; }
 #header h1 {
-  font-size: 13px;
-  letter-spacing: 2px;
-  color: var(--gold);
+  font-size: 13px; letter-spacing: 2px; color: var(--gold);
   text-shadow: 0 0 20px rgba(245,197,24,0.5), 2px 2px 0 #7a6010;
   margin-bottom: 6px;
 }
 #header .subtitle { font-size: 7px; color: #6b7aa1; letter-spacing: 3px; }
+#score-display { margin-top: 8px; font-size: 8px; color: var(--blue-accent); text-shadow: 0 0 10px rgba(74,158,255,0.4); }
 
 /* ─── TOURNAMENT BAR ─── */
-#tournament-bar { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+#tournament-bar { display: flex; gap: 6px; margin-bottom: 12px; align-items: center; flex-wrap: wrap; justify-content: center; }
 .battle-pip {
-  width: 28px; height: 28px;
-  border: 2px solid #3d3d5c;
-  border-radius: 50%;
-  background: #1a1a2e;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px;
-  transition: all 0.4s;
+  width: 26px; height: 26px; border: 2px solid #3d3d5c; border-radius: 50%;
+  background: #1a1a2e; display: flex; align-items: center; justify-content: center;
+  font-size: 8px; transition: all 0.4s; position: relative;
 }
 .battle-pip.won  { background: var(--gold); border-color: #d4a800; box-shadow: 0 0 12px rgba(245,197,24,0.6); }
 .battle-pip.lost { background: var(--red-hp); border-color: #c03030; }
 .battle-pip.current { border-color: var(--blue-accent); box-shadow: 0 0 10px rgba(74,158,255,0.5); animation: pulse-pip 1.5s infinite; }
+.battle-pip.boss { border-color: var(--purple-accent) !important; }
+.battle-pip.boss.current { box-shadow: 0 0 14px rgba(168,85,247,0.7); animation: pulse-boss 1.5s infinite; }
 @keyframes pulse-pip {
-  0%, 100% { box-shadow: 0 0 10px rgba(74,158,255,0.5); }
-  50%       { box-shadow: 0 0 20px rgba(74,158,255,0.9); }
+  0%,100% { box-shadow: 0 0 10px rgba(74,158,255,0.5); }
+  50%      { box-shadow: 0 0 22px rgba(74,158,255,0.9); }
+}
+@keyframes pulse-boss {
+  0%,100% { box-shadow: 0 0 12px rgba(168,85,247,0.6); }
+  50%      { box-shadow: 0 0 24px rgba(168,85,247,1); }
 }
 .battle-label { font-size: 7px; color: #6b7aa1; margin: 0 4px; }
+#boss-label { font-size: 6px; color: var(--purple-accent); animation: pulse-pip 2s infinite; }
 
 /* ─── GAME BOY SHELL ─── */
 #gameboy {
   width: 100%; max-width: 440px;
-  background: #2a2a3e;
+  background: linear-gradient(145deg, #2e2e45 0%, #1e1e32 100%);
   border: 3px solid #3d3d5c;
   border-radius: 12px 12px 40px 12px;
-  box-shadow: 0 0 0 1px #1a1a2e, 0 20px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: 0 0 0 1px #1a1a2e, 0 24px 70px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.07);
   overflow: hidden;
+  position: relative;
 }
 
 /* ─── SCREEN ─── */
 #screen {
-  background: #1a2634;
-  margin: 12px;
-  border-radius: 6px;
-  border: 3px solid #111;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 0 30px rgba(74,158,255,0.1);
-  overflow: hidden;
+  background: #1a2634; margin: 12px;
+  border-radius: 6px; border: 3px solid #0a0a0a;
+  box-shadow: inset 0 0 24px rgba(0,0,0,0.6), 0 0 30px rgba(74,158,255,0.12);
+  overflow: hidden; position: relative;
+}
+/* CRT scanlines */
+#screen::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 500; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 2px,
+    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+  );
+}
+/* CRT vignette */
+#screen::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 501; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%);
 }
 
 /* ─── ARENA ─── */
 #arena {
-  height: 220px;
-  position: relative;
-  background: linear-gradient(180deg,
-    #1a3a5c 0%, #2a5580 30%, #3a6f9a 55%,
-    #4a8ab8 55%, #5a9fd0 60%, #6ab5e8 65%
-  );
-  overflow: hidden;
+  height: 224px; position: relative;
+  background: linear-gradient(180deg, #1a3a5c 0%, #2a5580 30%, #3a6f9a 55%, #4a8ab8 55.5%, #5a9fd0 61%, #6ab5e8 66%);
+  overflow: hidden; transition: background 1.2s ease;
 }
 #arena::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 70px;
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 72px;
   background: linear-gradient(180deg, #2d5a1e 0%, #3a7428 30%, #4a8f35 60%, #5aad42 100%);
-  border-top: 3px solid #1f3d15;
+  border-top: 3px solid #1f3d15; transition: background 1.2s;
+}
+/* ground platform for player/enemy */
+#platform-enemy {
+  position: absolute; right: 30px; top: 105px;
+  width: 80px; height: 16px; z-index: 4;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 70%);
+  border-radius: 50%;
+}
+#platform-player {
+  position: absolute; left: 16px; bottom: 70px;
+  width: 80px; height: 18px; z-index: 4;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.25) 0%, transparent 70%);
+  border-radius: 50%;
 }
 .cloud {
-  position: absolute;
-  background: rgba(255,255,255,0.15);
-  border-radius: 20px;
-  animation: drift linear infinite;
+  position: absolute; background: rgba(255,255,255,0.15);
+  border-radius: 20px; animation: drift linear infinite;
 }
 @keyframes drift {
   from { transform: translateX(-120px); }
-  to   { transform: translateX(calc(100vw + 120px)); }
+  to   { transform: translateX(calc(440px + 120px)); }
 }
+
+/* ─── WEATHER OVERLAY ─── */
+#weather-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+#weather-badge {
+  position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px; padding: 3px 8px; font-size: 5px; color: white;
+  z-index: 20; white-space: nowrap; display: none;
+}
+#weather-badge.show { display: block; animation: bounce-in 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+
+.rain-drop {
+  position: absolute; width: 1.5px; border-radius: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(120,190,255,0.75));
+  animation: rain-fall linear infinite; top: -40px;
+}
+@keyframes rain-fall { to { transform: translateY(300px) translateX(-15px); } }
+
+.sun-ray {
+  position: absolute; top: 0; left: 50%;
+  width: 2px; transform-origin: top center;
+  background: linear-gradient(to bottom, rgba(255,220,50,0.45), transparent);
+  animation: ray-pulse 2.2s ease-in-out infinite;
+}
+@keyframes ray-pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+
+.sand-particle {
+  position: absolute; border-radius: 50%;
+  background: rgba(200,150,60,0.65);
+  animation: sand-blow linear infinite;
+}
+@keyframes sand-blow {
+  from { transform: translateX(-20px) translateY(0); opacity: 0.8; }
+  to   { transform: translateX(460px) translateY(var(--sdrift)); opacity: 0; }
+}
+
+.hail-particle {
+  position: absolute; border-radius: 50%;
+  background: rgba(210,245,255,0.85);
+  animation: hail-fall linear infinite; top: -10px;
+  box-shadow: 0 0 3px rgba(150,230,255,0.5);
+}
+@keyframes hail-fall { to { transform: translateY(280px) translateX(var(--hdrift)); opacity: 0.2; } }
+
+.fog-layer {
+  position: absolute; inset: 0;
+  background: rgba(140,165,200,0.12);
+  animation: fog-drift 4s ease-in-out infinite alternate;
+}
+@keyframes fog-drift { from { opacity: 0.08; } to { opacity: 0.22; } }
+
+/* Weather arena tints */
+#arena.weather-sun  { background: linear-gradient(180deg, #3a4010 0%, #6a7020 30%, #8a9030 55%, #9aaa40 55.5%, #aaba55 61%, #baca68 66%) !important; }
+#arena.weather-rain { background: linear-gradient(180deg, #141826 0%, #1e2838 30%, #283848 55%, #3a4858 55.5%, #485868 61%, #566878 66%) !important; }
+#arena.weather-sandstorm { background: linear-gradient(180deg, #3a2810 0%, #5a4018 30%, #7a5828 55%, #8a6834 55.5%, #9a7840 61%, #aa8850 66%) !important; }
+#arena.weather-hail { background: linear-gradient(180deg, #0e2030 0%, #1a2c3e 30%, #26384a 55%, #324456 55.5%, #3e5060 61%, #4a5c6e 66%) !important; }
 
 /* ─── POKEMON CONTAINERS ─── */
 .poke-wrap { position: absolute; z-index: 10; transition: all 0.3s ease; }
-#wrap-enemy  { top: 10px; right: 15px; text-align: right; }
-#wrap-player { bottom: 10px; left: 10px; z-index: 11; }
+#wrap-enemy  { top: 8px; right: 12px; text-align: right; }
+#wrap-player { bottom: 8px; left: 8px; z-index: 11; }
 
 /* ─── HP BOX ─── */
 .hpbox {
-  background: var(--cream);
-  color: #1a1a2e;
+  background: var(--cream); color: #1a1a2e;
   padding: 5px 8px 6px;
-  border: 2px solid #7b6f50;
-  border-radius: 6px;
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
-  min-width: 150px;
+  border: 2px solid #7b6f50; border-radius: 6px;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.45);
+  min-width: 156px;
 }
 #wrap-enemy .hpbox  { margin-bottom: 4px; }
 #wrap-player .hpbox { margin-top: 4px; }
 .hpbox-name {
   font-size: 7px; font-weight: bold;
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 4px; gap: 6px;
+  margin-bottom: 4px; gap: 4px;
 }
-.poke-name { letter-spacing: 0.5px; }
+.poke-name { letter-spacing: 0.5px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.poke-level { font-size: 5px; color: #5a5040; flex-shrink: 0; }
+.type-badges { display: flex; gap: 2px; flex-shrink: 0; }
 .poke-type-badge {
   font-size: 5px; padding: 2px 4px; border-radius: 3px;
-  text-transform: uppercase; color: white; font-weight: bold;
-  letter-spacing: 0.5px; flex-shrink: 0;
+  text-transform: uppercase; color: white; font-weight: bold; letter-spacing: 0.5px;
 }
 .hp-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
 .hp-label   { font-size: 6px; color: #5a5040; }
@@ -152,13 +225,11 @@ body {
 .hpbar-track { background: #c8bfa8; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #a09070; }
 .hpbar-fill {
   height: 100%; border-radius: 4px;
-  transition: width 0.4s ease, background 0.4s ease;
+  transition: width 0.45s ease, background 0.45s ease;
   position: relative;
 }
 .hpbar-fill::after {
-  content: '';
-  position: absolute;
-  top: 1px; left: 2px; right: 2px; height: 2px;
+  content: ''; position: absolute; top: 1px; left: 2px; right: 2px; height: 2px;
   background: rgba(255,255,255,0.4); border-radius: 2px;
 }
 .status-badge { display: inline-block; font-size: 5px; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
@@ -168,322 +239,267 @@ body {
 .status-slp { background: #64748b; color: white; }
 .status-frz { background: #67e8f9; color: #0e7490; }
 
-/* ─── SPRITES (tamanho uniforme) ─── */
+/* ─── SPRITES ─── */
 .sprite {
-  image-rendering: pixelated;
-  display: block;
-  width: 96px !important;
-  height: 96px !important;
-  object-fit: contain;
+  image-rendering: pixelated; display: block;
+  width: 96px !important; height: 96px !important; object-fit: contain;
   filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5));
   transition: transform 0.3s ease, opacity 0.5s ease, filter 0.3s ease;
 }
 
 /* ─── TEXTBOX ─── */
 #textbox-wrap {
-  background: var(--cream);
-  border-top: 3px solid #7b6f50;
-  padding: 10px 14px;
-  min-height: 62px;
-  display: flex;
-  align-items: center;
-  position: relative;
+  background: var(--cream); border-top: 3px solid #7b6f50;
+  padding: 10px 14px; min-height: 64px;
+  display: flex; align-items: center; position: relative; cursor: pointer;
+  user-select: none;
 }
 #textbox-wrap::before {
-  content: '';
-  position: absolute;
-  top: -1px; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
 }
 #textbox {
-  font-size: 9px;
-  color: #1a1a2e;
-  line-height: 1.8;
-  font-family: 'Press Start 2P', monospace;
-  min-height: 36px;
+  font-size: 9px; color: #1a1a2e; line-height: 1.85;
+  font-family: 'Press Start 2P', monospace; min-height: 36px; flex: 1;
 }
+#textbox-hint { font-size: 5px; color: #b09060; position: absolute; bottom: 4px; right: 8px; opacity: 0.7; }
 #cursor {
   display: inline-block; width: 8px; height: 10px;
-  background: #1a1a2e; margin-left: 4px;
-  animation: blink-cursor 0.7s step-end infinite;
-  vertical-align: middle;
+  background: #1a1a2e; margin-left: 3px;
+  animation: blink-cursor 0.7s step-end infinite; vertical-align: middle;
 }
-@keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes blink-cursor { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
-/* ─── ACTION MENU ─── */
+/* ─── ACTION PANEL ─── */
 #action-panel {
-  background: #1a1a2e;
-  border-top: 3px solid #111;
-  padding: 8px;
+  background: #17172a; border-top: 3px solid #0a0a0a;
+  padding: 8px; position: relative;
 }
+#speed-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 5px;
+  position: absolute; top: 4px; right: 4px; z-index: 10;
+  background: #2d2d4a; color: #6b7aa1; border: 1px solid #3d3d5c;
+  border-radius: 3px; padding: 3px 5px; cursor: pointer; transition: all 0.15s;
+}
+#speed-btn:hover { background: #3d3d6a; color: #94a3b8; }
+#speed-btn.fast { background: var(--gold); color: #1a1a2e; border-color: #d4a800; }
 
-/* Main action menu: Lutar / Mochila / Fugir */
-#main-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
-}
+#main-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
 .action-btn {
-  padding: 10px 4px;
-  border: 2px solid #4d4d7c;
-  background: #252545;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
-  cursor: pointer;
-  border-radius: 5px;
-  color: #e2e8f0;
-  transition: all 0.15s;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  padding: 10px 4px; border: 2px solid #4d4d7c; background: #22223a;
+  font-family: 'Press Start 2P', monospace; font-size: 7px;
+  cursor: pointer; border-radius: 5px; color: #e2e8f0;
+  transition: all 0.15s; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
 }
 .action-btn:hover:not(:disabled) {
-  background: #363666;
-  border-color: var(--blue-accent);
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(74,158,255,0.35);
+  background: #303058; border-color: var(--blue-accent);
+  transform: translateY(-1px); box-shadow: 0 3px 12px rgba(74,158,255,0.35);
 }
-.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .action-btn .btn-icon { font-size: 14px; line-height: 1; }
-.action-btn.btn-fight  { border-color: #ef4444; }
-.action-btn.btn-fight:hover:not(:disabled)  { border-color: #ef4444; box-shadow: 0 3px 10px rgba(239,68,68,0.4); }
-.action-btn.btn-bag    { border-color: #f97316; }
-.action-btn.btn-bag:hover:not(:disabled)    { border-color: #f97316; box-shadow: 0 3px 10px rgba(249,115,22,0.4); }
-.action-btn.btn-run    { border-color: #64748b; }
-.action-btn.btn-run:hover:not(:disabled)    { border-color: #94a3b8; box-shadow: 0 3px 10px rgba(148,163,184,0.3); }
+.action-btn.btn-fight { border-color: #ef4444; }
+.action-btn.btn-fight:hover:not(:disabled) { border-color: #ef4444; box-shadow: 0 3px 12px rgba(239,68,68,0.45); }
+.action-btn.btn-bag { border-color: #f97316; }
+.action-btn.btn-bag:hover:not(:disabled) { border-color: #f97316; box-shadow: 0 3px 12px rgba(249,115,22,0.45); }
+.action-btn.btn-run { border-color: #64748b; }
+.action-btn.btn-run:hover:not(:disabled) { border-color: #94a3b8; box-shadow: 0 3px 12px rgba(148,163,184,0.3); }
 
 /* ─── MOVES SUBMENU ─── */
 #moves-panel { display: none; }
 #moves-panel.visible { display: block; }
 #moves-header {
-  font-size: 6px; color: var(--blue-accent);
-  letter-spacing: 2px; text-transform: uppercase;
+  font-size: 6px; color: var(--blue-accent); letter-spacing: 2px; text-transform: uppercase;
   margin-bottom: 6px; padding-left: 2px;
   display: flex; justify-content: space-between; align-items: center;
 }
-#moves {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-}
+#moves { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
 .move-btn {
-  padding: 8px 6px;
-  border: 2px solid var(--btn-border);
-  background: var(--btn-bg);
-  font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
-  cursor: pointer;
-  border-radius: 4px;
-  text-align: left;
-  color: #1a1a2e;
-  transition: all 0.1s;
-  position: relative;
-  overflow: hidden;
-  line-height: 1.5;
+  padding: 0; border: 2px solid var(--btn-border); background: var(--btn-bg);
+  font-family: 'Press Start 2P', monospace; font-size: 6px; cursor: pointer;
+  border-radius: 5px; text-align: left; color: #1a1a2e;
+  transition: all 0.12s; position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
 }
+.move-type-bar { height: 4px; width: 100%; border-radius: 3px 3px 0 0; }
+.move-btn-inner { padding: 5px 6px 5px; flex: 1; }
 .move-btn:hover:not(:disabled) {
-  background: #fff;
-  border-color: var(--blue-accent);
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(74,158,255,0.3);
+  background: #fff; transform: translateY(-1px); box-shadow: 0 3px 10px rgba(74,158,255,0.3);
 }
 .move-btn:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
 .move-btn:disabled { background: #c8c0a8; cursor: not-allowed; color: #7a7060; border-color: #a09080; }
-.move-btn .move-name { display: block; margin-bottom: 3px; }
-.move-meta { display: flex; gap: 4px; align-items: center; }
+.move-btn:disabled .move-type-bar { opacity: 0.4; }
+.move-name { display: block; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.move-meta { display: flex; gap: 3px; align-items: center; flex-wrap: nowrap; }
 .move-type-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.move-cat { font-size: 7px; }
 .move-pp { font-size: 5px; color: #5a5040; }
-.move-power-label { font-size: 5px; color: #2a5580; }
+.move-pp.low { color: #ef4444; }
+.move-pow { font-size: 5px; color: #2a5580; }
+.move-key { font-size: 5px; color: #a09070; margin-left: auto; }
 
-/* Back button */
 .back-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
-  padding: 4px 8px;
-  background: #3d3d5c;
-  color: #94a3b8;
-  border: 1px solid #4d4d6c;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.1s;
+  font-family: 'Press Start 2P', monospace; font-size: 6px;
+  padding: 4px 8px; background: #2d2d4a; color: #94a3b8;
+  border: 1px solid #3d3d5c; border-radius: 3px;
+  cursor: pointer; transition: all 0.1s;
 }
-.back-btn:hover { background: #4d4d6c; color: #e2e8f0; }
+.back-btn:hover { background: #3d3d6a; color: #e2e8f0; }
 
-/* ─── BAG / MOCHILA ─── */
+/* ─── BAG ─── */
 #bag-panel { display: none; }
 #bag-panel.visible { display: block; }
 #bag-header {
-  font-size: 6px; color: #f97316;
-  letter-spacing: 2px; text-transform: uppercase;
+  font-size: 6px; color: #f97316; letter-spacing: 2px; text-transform: uppercase;
   margin-bottom: 6px; padding-left: 2px;
   display: flex; justify-content: space-between; align-items: center;
 }
-#bag-items {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-}
+#bag-items { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
 .item-btn {
-  padding: 7px 6px;
-  border: 2px solid #7b6030;
-  background: #2e2010;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
-  cursor: pointer;
-  border-radius: 4px;
-  text-align: left;
-  color: #fde68a;
-  transition: all 0.1s;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  line-height: 1.6;
+  padding: 7px 6px; border: 2px solid #7b6030; background: #28180a;
+  font-family: 'Press Start 2P', monospace; font-size: 6px; cursor: pointer;
+  border-radius: 5px; text-align: left; color: #fde68a;
+  transition: all 0.12s; display: flex; flex-direction: column; gap: 3px; line-height: 1.6;
 }
-.item-btn:hover:not(:disabled) {
-  background: #3e3020;
-  border-color: #f97316;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(249,115,22,0.3);
-}
-.item-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.item-btn:hover:not(:disabled) { background: #382010; border-color: #f97316; transform: translateY(-1px); box-shadow: 0 3px 10px rgba(249,115,22,0.35); }
+.item-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 .item-btn .item-icon { font-size: 12px; }
 .item-btn .item-name { font-size: 6px; color: #fde68a; }
 .item-btn .item-count { font-size: 5px; color: #f97316; }
 .item-btn .item-desc  { font-size: 5px; color: #b08040; }
 
 /* ─── TYPE COLORS ─── */
-.type-normal    { background: #a0a0a0; }
-.type-fire      { background: #f08030; }
-.type-water     { background: #6890f0; }
-.type-grass     { background: #78c850; }
-.type-electric  { background: #f8d030; }
-.type-ice       { background: #98d8d8; }
-.type-fighting  { background: #c03028; }
-.type-ground    { background: #e0c068; }
-.type-flying    { background: #a890f0; }
-.type-psychic   { background: #f85888; }
-.type-bug       { background: #a8b820; }
-.type-rock      { background: #b8a038; }
-.type-ghost     { background: #705898; }
-.type-dragon    { background: #7038f8; }
-.type-dark      { background: #705848; }
-.type-steel     { background: #b8b8d0; }
-.type-poison    { background: #a040a0; }
-.type-fairy     { background: #ee99ac; }
+.type-normal   { background: #a0a0a0; }
+.type-fire     { background: #f08030; }
+.type-water    { background: #6890f0; }
+.type-grass    { background: #78c850; }
+.type-electric { background: #f8d030; }
+.type-ice      { background: #98d8d8; }
+.type-fighting { background: #c03028; }
+.type-ground   { background: #e0c068; }
+.type-flying   { background: #a890f0; }
+.type-psychic  { background: #f85888; }
+.type-bug      { background: #a8b820; }
+.type-rock     { background: #b8a038; }
+.type-ghost    { background: #705898; }
+.type-dragon   { background: #7038f8; }
+.type-dark     { background: #705848; }
+.type-steel    { background: #b8b8d0; }
+.type-poison   { background: #a040a0; }
+.type-fairy    { background: #ee99ac; }
 
 /* ─── BOTTOM BAR ─── */
 #bottom-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px 10px;
-  background: #252538;
-  border-top: 2px solid #111;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 14px 12px; background: #1c1c2e; border-top: 2px solid #0a0a0a;
 }
 .dpad {
   display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr;
-  gap: 1px; width: 40px; height: 40px; opacity: 0.3;
+  gap: 1px; width: 42px; height: 42px; opacity: 0.25;
 }
 .dpad > div { background: #3d3d5c; border-radius: 2px; }
-.dpad > div:nth-child(2), .dpad > div:nth-child(4),
-.dpad > div:nth-child(6), .dpad > div:nth-child(8) { background: #4d4d6c; }
+.dpad > div:nth-child(2),.dpad > div:nth-child(4),
+.dpad > div:nth-child(6),.dpad > div:nth-child(8) { background: #4d4d6c; }
+.ab-buttons { display: flex; gap: 6px; opacity: 0.25; }
+.ab-btn { width: 18px; height: 18px; border-radius: 50%; background: #8b2252; border: 2px solid #5a1535; }
+.ab-btn:last-child { background: #1a4f8b; border-color: #0f3060; }
+.kb-hints { font-size: 5px; color: #3d3d5c; text-align: center; line-height: 1.9; }
 
 /* ─── BATTLE ANIMATIONS ─── */
 @keyframes shake-x {
-  0%, 100% { transform: translateX(0); }
-  20%       { transform: translateX(-6px); }
-  40%       { transform: translateX(6px); }
-  60%       { transform: translateX(-4px); }
-  80%       { transform: translateX(4px); }
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); } 40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); } 80% { transform: translateX(5px); }
 }
 @keyframes flash-white {
-  0%, 100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
-  50%       { filter: drop-shadow(0 0 20px white) brightness(10); }
+  0%,100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
+  50%      { filter: drop-shadow(0 0 24px white) brightness(10); }
 }
-@keyframes faint-fall {
-  to { transform: translateY(60px); opacity: 0; }
-}
-@keyframes enter-slide-right {
-  from { transform: translateX(80px); opacity: 0; }
-  to   { transform: translateX(0); opacity: 1; }
-}
-@keyframes enter-slide-left {
-  from { transform: translateX(-80px); opacity: 0; }
-  to   { transform: translateX(0); opacity: 1; }
-}
+@keyframes faint-fall { to { transform: translateY(65px) rotate(15deg); opacity: 0; } }
+@keyframes enter-slide-right { from { transform: translateX(90px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes enter-slide-left  { from { transform: translateX(-90px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes bounce-in {
-  0%   { transform: scale(0.5); opacity: 0; }
-  60%  { transform: scale(1.1); opacity: 1; }
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
   100% { transform: scale(1); }
 }
-@keyframes attack-lunge-right {
-  0%   { transform: translateX(0); }
-  40%  { transform: translateX(30px); }
-  100% { transform: translateX(0); }
-}
-@keyframes attack-lunge-left {
-  0%   { transform: translateX(0); }
-  40%  { transform: translateX(-30px); }
-  100% { transform: translateX(0); }
-}
-@keyframes hit-flash {
-  0%, 100% { opacity: 1; }
-  25%, 75%  { opacity: 0; }
-  50%        { opacity: 0.3; }
-}
+@keyframes attack-lunge-right { 0% { transform: translateX(0); } 40% { transform: translateX(34px); } 100% { transform: translateX(0); } }
+@keyframes attack-lunge-left  { 0% { transform: translateX(0); } 40% { transform: translateX(-34px); } 100% { transform: translateX(0); } }
+@keyframes hit-flash { 0%,100% { opacity: 1; } 25%,75% { opacity: 0; } 50% { opacity: 0.25; } }
 @keyframes status-pulse {
-  0%, 100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
-  50%       { filter: drop-shadow(0 0 15px rgba(168,85,247,0.8)); }
+  0%,100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
+  50%      { filter: drop-shadow(0 0 16px rgba(168,85,247,0.85)); }
 }
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-4px); }
-}
+@keyframes float  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 @keyframes heal-glow {
-  0%, 100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
-  50%       { filter: drop-shadow(0 0 15px rgba(56,217,128,0.9)); }
+  0%,100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
+  50%      { filter: drop-shadow(0 0 18px rgba(56,217,128,0.95)); }
+}
+@keyframes crit-glow {
+  0%,100% { filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)); }
+  50%      { filter: drop-shadow(0 0 18px rgba(255,80,80,0.9)) brightness(1.4); }
+}
+@keyframes screen-shake {
+  0%,100% { transform: none; }
+  10%  { transform: translate(-5px, 2px); } 20% { transform: translate(5px,-2px); }
+  30%  { transform: translate(-4px, 3px); } 40% { transform: translate(4px,-1px); }
+  50%  { transform: translate(-2px, 2px); } 60% { transform: translate(3px,-2px); }
+  70%  { transform: translate(-1px, 1px); }
+}
+@keyframes boss-enter {
+  0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+  50%  { transform: scale(1.3) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
 .anim-enter-enemy  { animation: enter-slide-right 0.5s ease forwards; }
-.anim-enter-player { animation: enter-slide-left 0.5s ease forwards; }
+.anim-enter-player { animation: enter-slide-left  0.5s ease forwards; }
 .anim-bounce       { animation: bounce-in 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 .anim-hit          { animation: hit-flash 0.15s 3; }
 .anim-attack-p     { animation: attack-lunge-right 0.3s ease; }
-.anim-attack-e     { animation: attack-lunge-left 0.3s ease; }
-.anim-faint        { animation: faint-fall 0.5s ease forwards; }
+.anim-attack-e     { animation: attack-lunge-left  0.3s ease; }
+.anim-faint        { animation: faint-fall 0.6s ease forwards; }
 .anim-status       { animation: status-pulse 0.5s 4; }
-.anim-float        { animation: float 2s ease-in-out infinite; }
-.anim-heal         { animation: heal-glow 0.4s 3; }
+.anim-float        { animation: float 2.2s ease-in-out infinite; }
+.anim-heal         { animation: heal-glow 0.45s 3; }
+.anim-crit         { animation: crit-glow 0.2s 3; }
+.anim-boss-enter   { animation: boss-enter 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.screen-shake      { animation: screen-shake 0.45s ease; }
 
 /* ─── DAMAGE POPUP ─── */
 .dmg-popup {
-  position: absolute; font-size: 10px; font-weight: bold;
-  color: white; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000;
-  pointer-events: none; animation: dmg-float 1.2s ease forwards; z-index: 50;
+  position: absolute; font-size: 10px; font-weight: bold; font-family: 'Press Start 2P', monospace;
+  color: white; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  pointer-events: none; animation: dmg-float 1.3s ease forwards; z-index: 50;
 }
-.dmg-popup.super    { color: var(--gold); font-size: 13px; }
+.dmg-popup.super    { color: #ffe040; font-size: 13px; }
 .dmg-popup.not-very { color: #94a3b8; font-size: 8px; }
 .dmg-popup.heal     { color: #38d980; }
+.dmg-popup.crit     { color: #ff6060; font-size: 12px; }
 @keyframes dmg-float {
   0%   { transform: translateY(0); opacity: 1; }
-  70%  { transform: translateY(-30px); opacity: 1; }
-  100% { transform: translateY(-45px); opacity: 0; }
+  70%  { transform: translateY(-32px); opacity: 1; }
+  100% { transform: translateY(-48px); opacity: 0; }
 }
 
 /* ─── EFFECT BANNER ─── */
 #effect-banner {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background: rgba(0,0,0,0.85); color: white;
+  background: rgba(0,0,0,0.88); color: white;
   padding: 6px 14px; border-radius: 20px; font-size: 7px;
   white-space: nowrap; z-index: 100;
   transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
-  border: 2px solid rgba(255,255,255,0.2);
-  pointer-events: none;
+  border: 2px solid rgba(255,255,255,0.2); pointer-events: none;
 }
 #effect-banner.show { transform: translate(-50%, -50%) scale(1); }
+
+/* ─── SCREEN FLASH ─── */
+#screen-flash {
+  position: absolute; inset: 0; pointer-events: none; z-index: 200;
+  opacity: 0; transition: opacity 0.06s; border-radius: 4px;
+}
+#screen-flash.active { opacity: 1; }
 
 /* ─── LOADING ─── */
 #loading-overlay {
@@ -493,61 +509,98 @@ body {
 }
 .loading-ball {
   width: 60px; height: 60px; border-radius: 50%;
-  background: linear-gradient(180deg, #ef4444 0%, #ef4444 50%, white 50%, white 53%, #1a1a2e 53%);
-  border: 3px solid #1a1a2e; box-shadow: 0 0 30px rgba(239,68,68,0.5);
-  animation: spin-ball 1s linear infinite, pulse-ball 1s ease-in-out infinite;
-  position: relative;
+  background: conic-gradient(#ef4444 0deg 180deg, white 180deg 360deg);
+  border: 4px solid #1a1a2e;
+  box-shadow: 0 0 0 3px #ef4444, 0 12px 36px rgba(239,68,68,0.45);
+  animation: spin-ball 0.85s linear infinite; position: relative;
 }
 .loading-ball::after {
+  content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 3px;
+  background: #1a1a2e; transform: translateY(-50%);
+}
+.loading-ball::before {
   content: ''; position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 14px; height: 14px; border-radius: 50%;
-  background: white; border: 3px solid #1a1a2e;
+  width: 12px; height: 12px; background: white; border: 2px solid #1a1a2e;
+  border-radius: 50%; transform: translate(-50%, -50%); z-index: 1;
 }
-@keyframes spin-ball  { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes pulse-ball {
-  0%, 100% { box-shadow: 0 0 30px rgba(239,68,68,0.5); }
-  50%       { box-shadow: 0 0 60px rgba(239,68,68,0.9); }
-}
+@keyframes spin-ball { to { transform: rotate(360deg); } }
 #loading-text {
-  margin-top: 16px; font-size: 8px; color: #6b7aa1; letter-spacing: 2px;
+  margin-top: 18px; font-size: 8px; color: #6b7aa1; letter-spacing: 2px;
   animation: fade-text 0.8s ease-in-out infinite alternate;
 }
-@keyframes fade-text { from { opacity: 0.4; } to { opacity: 1; } }
+@keyframes fade-text { from { opacity: 0.35; } to { opacity: 1; } }
 
-/* ─── WIN/LOSE OVERLAY ─── */
+/* ─── WIN/LOSE PER-BATTLE OVERLAY ─── */
 #result-overlay {
   display: none; position: absolute; inset: 0;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(2px);
-  z-index: 200; align-items: center; justify-content: center;
-  flex-direction: column; gap: 12px;
+  background: rgba(0,0,0,0.72); backdrop-filter: blur(3px);
+  z-index: 202; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px;
 }
 #result-overlay.show { display: flex; }
-#result-title { font-size: 16px; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); animation: bounce-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-#result-sub { font-size: 7px; color: #cbd5e1; text-align: center; line-height: 2; }
+#result-title { font-size: 15px; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); animation: bounce-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+#result-sub { font-size: 7px; color: #cbd5e1; text-align: center; line-height: 2.2; }
+#result-score { font-size: 9px; color: var(--gold); text-shadow: 0 0 12px rgba(245,197,24,0.6); }
 #result-btn {
   font-family: 'Press Start 2P', monospace; font-size: 8px;
   padding: 10px 20px; background: var(--gold); color: #1a1a2e;
-  border: 3px solid #d4a800; border-radius: 4px;
+  border: 3px solid #d4a800; border-radius: 5px;
   cursor: pointer; animation: pulse-pip 1.5s infinite; margin-top: 4px;
+}
+
+/* ─── FINAL SCORE OVERLAY ─── */
+#final-overlay {
+  display: none; position: absolute; inset: 0;
+  background: rgba(0,0,0,0.93); backdrop-filter: blur(5px);
+  z-index: 205; align-items: center; justify-content: center;
+  flex-direction: column; gap: 7px; padding: 14px;
+  overflow-y: auto;
+}
+#final-overlay.show { display: flex; }
+.final-title { font-size: 13px; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); animation: bounce-in 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.final-stars { font-size: 20px; letter-spacing: 5px; }
+.final-score-label { font-size: 6px; color: #6b7aa1; margin-top: 2px; }
+.final-score-big { font-size: 12px; color: white; text-shadow: 0 0 16px rgba(74,158,255,0.5); }
+.final-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, #3d3d5c, transparent); margin: 4px 0; }
+.final-stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 6px; color: #cbd5e1; gap: 12px; width: 100%; padding: 0 8px;
+}
+.final-stat-row .won-mark  { color: #38d980; }
+.final-stat-row .lost-mark { color: var(--red-hp); }
+.final-hall { font-size: 5px; color: var(--purple-accent); text-align: center; line-height: 2; margin-top: 2px; }
+#final-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 8px;
+  padding: 10px 22px; background: var(--gold); color: #1a1a2e;
+  border: 3px solid #d4a800; border-radius: 5px; cursor: pointer;
+  margin-top: 6px; animation: pulse-pip 1.5s infinite;
 }
 
 /* ─── ITEM USE ANIMATION ─── */
 @keyframes item-use-pop {
-  0%   { transform: scale(0); opacity: 0; }
-  60%  { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% { transform: scale(0) translateX(-50%); opacity: 0; }
+  60% { transform: scale(1.2) translateX(-50%); opacity: 1; }
+  100% { transform: scale(1) translateX(-50%); opacity: 1; }
 }
 .item-use-bubble {
-  position: absolute; top: 40%; left: 50%;
-  transform: translateX(-50%);
-  background: rgba(249,115,22,0.9);
-  color: white; padding: 6px 12px; border-radius: 12px;
+  position: absolute; top: 38%; left: 50%;
+  background: rgba(249,115,22,0.92);
+  color: white; padding: 6px 14px; border-radius: 14px;
   font-size: 8px; z-index: 100;
-  animation: item-use-pop 0.3s ease forwards;
-  pointer-events: none;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  animation: item-use-pop 0.35s ease forwards;
+  pointer-events: none; text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  white-space: nowrap;
 }
+
+/* ─── BATTLE WIPE TRANSITION ─── */
+#battle-wipe {
+  position: absolute; inset: 0; background: #0d0d1a; z-index: 300;
+  pointer-events: none; transform: scaleX(0); transform-origin: left;
+}
+#battle-wipe.wipe-in  { animation: wipe-in  0.28s ease forwards; }
+#battle-wipe.wipe-out { animation: wipe-out 0.28s ease forwards; }
+@keyframes wipe-in  { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes wipe-out { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -556,51 +609,54 @@ body {
 </head>
 <body>
 
-<!-- Loading -->
 <div id="loading-overlay">
   <div class="loading-ball"></div>
   <div id="loading-text">CARREGANDO POKÉMON...</div>
 </div>
 
-<!-- Header -->
 <div id="header">
   <h1>🏆 TORNEIO DIÁRIO</h1>
-  <div class="subtitle">POKÉMON · GEN I · DAILY CHALLENGE</div>
+  <div class="subtitle">POKÉMON · GEN I–III · DAILY CHALLENGE</div>
+  <div id="score-display">PONTOS: <span id="score-val">0</span></div>
 </div>
 
-<!-- Tournament progress -->
 <div id="tournament-bar">
   <span class="battle-label">BATALHA</span>
   <div class="battle-pip" id="pip1">1</div>
   <div class="battle-pip" id="pip2">2</div>
   <div class="battle-pip" id="pip3">3</div>
+  <div class="battle-pip" id="pip4">4</div>
+  <div class="battle-pip boss" id="pip5">👑</div>
+  <span id="boss-label"></span>
 </div>
 
-<!-- Game Boy Shell -->
 <div id="gameboy">
   <div id="screen">
 
-    <!-- Arena -->
     <div id="arena">
-      <div class="cloud" style="width:60px;height:16px;top:20px;animation-duration:18s;animation-delay:0s;opacity:.12"></div>
-      <div class="cloud" style="width:40px;height:12px;top:35px;animation-duration:25s;animation-delay:-10s;opacity:.08"></div>
-
+      <div class="cloud" style="width:58px;height:15px;top:18px;animation-duration:19s;opacity:.12"></div>
+      <div class="cloud" style="width:38px;height:11px;top:34px;animation-duration:26s;animation-delay:-11s;opacity:.08"></div>
+      <div id="platform-enemy"></div>
+      <div id="platform-player"></div>
+      <div id="weather-overlay"></div>
+      <div id="weather-badge"></div>
       <div id="effect-banner"></div>
+      <div id="screen-flash"></div>
+      <div id="battle-wipe"></div>
 
       <!-- Enemy -->
       <div id="wrap-enemy" class="poke-wrap">
         <div class="hpbox">
           <div class="hpbox-name">
             <span class="poke-name" id="p2name">???</span>
-            <span class="poke-type-badge type-normal" id="p2type">???</span>
+            <span class="poke-level" id="p2level"></span>
+            <div class="type-badges" id="p2types"><span class="poke-type-badge type-normal">???</span></div>
           </div>
           <div class="hp-label-row">
             <span class="hp-label">HP</span>
             <span class="hp-numbers" id="hp2-nums">-- / --</span>
           </div>
-          <div class="hpbar-track">
-            <div class="hpbar-fill" id="hp2" style="width:100%;background:var(--green-hp)"></div>
-          </div>
+          <div class="hpbar-track"><div class="hpbar-fill" id="hp2" style="width:100%;background:var(--green-hp)"></div></div>
           <span id="status2" class="status-badge" style="display:none"></span>
         </div>
         <img id="sprite2" class="sprite">
@@ -612,52 +668,62 @@ body {
         <div class="hpbox">
           <div class="hpbox-name">
             <span class="poke-name" id="p1name">???</span>
-            <span class="poke-type-badge type-normal" id="p1type">???</span>
+            <span class="poke-level" id="p1level"></span>
+            <div class="type-badges" id="p1types"><span class="poke-type-badge type-normal">???</span></div>
           </div>
           <div class="hp-label-row">
             <span class="hp-label">HP</span>
             <span class="hp-numbers" id="hp1-nums">-- / --</span>
           </div>
-          <div class="hpbar-track">
-            <div class="hpbar-fill" id="hp1" style="width:100%;background:var(--green-hp)"></div>
-          </div>
+          <div class="hpbar-track"><div class="hpbar-fill" id="hp1" style="width:100%;background:var(--green-hp)"></div></div>
           <span id="status1" class="status-badge" style="display:none"></span>
         </div>
       </div>
 
-      <!-- Result overlay -->
+      <!-- Per-battle result -->
       <div id="result-overlay">
         <div id="result-title"></div>
         <div id="result-sub"></div>
+        <div id="result-score"></div>
         <button id="result-btn" onclick="handleResultBtn()"></button>
+      </div>
+
+      <!-- Final tournament result -->
+      <div id="final-overlay">
+        <div class="final-title" id="final-title">🏆 CAMPEÃO!</div>
+        <div class="final-stars" id="final-stars">⭐⭐⭐</div>
+        <div class="final-score-label">PONTUAÇÃO FINAL</div>
+        <div class="final-score-big" id="final-score-big">0 PTS</div>
+        <div class="final-divider"></div>
+        <div id="final-stats" style="width:100%"></div>
+        <div class="final-divider"></div>
+        <div class="final-hall" id="final-hall"></div>
+        <button id="final-btn" onclick="location.reload()">▶ JOGAR NOVAMENTE</button>
       </div>
     </div>
 
     <!-- Textbox -->
-    <div id="textbox-wrap">
+    <div id="textbox-wrap" onclick="onTextboxClick()">
       <div id="textbox">Preparando torneio...<span id="cursor"></span></div>
+      <div id="textbox-hint">CLIQUE / Z</div>
     </div>
 
     <!-- Action Panel -->
     <div id="action-panel">
+      <button id="speed-btn" onclick="toggleSpeed()">1×</button>
 
-      <!-- Main menu: Lutar / Mochila / Fugir -->
       <div id="main-actions">
         <button class="action-btn btn-fight" id="btn-fight" onclick="showMoves()" disabled>
-          <span class="btn-icon">⚔️</span>
-          <span>LUTAR</span>
+          <span class="btn-icon">⚔️</span><span>LUTAR</span>
         </button>
         <button class="action-btn btn-bag" id="btn-bag" onclick="showBag()" disabled>
-          <span class="btn-icon">🎒</span>
-          <span>MOCHILA</span>
+          <span class="btn-icon">🎒</span><span>MOCHILA</span>
         </button>
         <button class="action-btn btn-run" id="btn-run" onclick="tryRun()" disabled>
-          <span class="btn-icon">💨</span>
-          <span>FUGIR</span>
+          <span class="btn-icon">💨</span><span>FUGIR</span>
         </button>
       </div>
 
-      <!-- Moves submenu -->
       <div id="moves-panel">
         <div id="moves-header">
           <span>⚔ GOLPES</span>
@@ -666,7 +732,6 @@ body {
         <div id="moves"></div>
       </div>
 
-      <!-- Bag submenu -->
       <div id="bag-panel">
         <div id="bag-header">
           <span>🎒 MOCHILA</span>
@@ -674,50 +739,189 @@ body {
         </div>
         <div id="bag-items"></div>
       </div>
-
     </div>
   </div>
 
-  <!-- Bottom bar -->
   <div id="bottom-bar">
     <div class="dpad">
       <div></div><div></div><div></div>
       <div></div><div></div><div></div>
       <div></div><div></div><div></div>
     </div>
-    <div style="font-size:7px;color:#4d4d6c;text-align:center;line-height:1.8">
-      DAILY<br>TOURNAMENT
-    </div>
-    <div style="font-size:6px;color:#4d4d6c;text-align:right;line-height:2">
-      A B<br>SELECT START
+    <div class="kb-hints">F=LUTAR  B=MOCHILA<br>1-4=GOLPE  Z=AVANÇAR<br>X=VOLTAR  S=VELOCIDADE</div>
+    <div class="ab-buttons">
+      <div class="ab-btn"></div>
+      <div class="ab-btn"></div>
     </div>
   </div>
 </div>
 
 <script>
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  STATE
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 let p1, p2;
 let playerTurn = false;
 let battleNumber = 1;
-let maxBattles = 3;
+const maxBattles = 5;
 let tournamentOver = false;
 let resultAction = null;
-let currentPanel = 'main'; // 'main' | 'moves' | 'bag'
+let currentPanel = 'main';
+let currentWeather = 'none';
+let totalScore = 0;
+let battleScores = [];
+let hallOfFame = [];
+let speedMult = 1;
+let textSkip = false;
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ');
-const rng = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+// Boss battle = battle 5
+const isBoss = () => battleNumber === maxBattles;
 
-// ─────────────────────────────────────────
-//  BAG / INVENTORY
-// ─────────────────────────────────────────
+// Difficulty per battle (stat multiplier for enemy)
+const diffMult  = [0.62, 0.78, 0.95, 1.12, 1.38];
+const enemyLvls = [  28,   36,  45,   54,   68 ];
+const PLAYER_LVL = 50;
+
+const sleep = ms => new Promise(r => setTimeout(r, Math.max(20, Math.round(ms / speedMult))));
+const cap   = s => s.charAt(0).toUpperCase() + s.slice(1).replace(/-/g, ' ');
+const rng   = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+
+// ═══════════════════════════════════════
+//  SPEED TOGGLE
+// ═══════════════════════════════════════
+function toggleSpeed() {
+  speedMult = speedMult === 1 ? 3 : 1;
+  const btn = document.getElementById('speed-btn');
+  btn.textContent = speedMult + '×';
+  btn.classList.toggle('fast', speedMult > 1);
+}
+
+// ═══════════════════════════════════════
+//  SCORE
+// ═══════════════════════════════════════
+function addScore(n) {
+  totalScore += n;
+  document.getElementById('score-val').textContent = totalScore;
+}
+function calcBattleScore() {
+  const hpBonus   = Math.floor((p1.hp / p1.maxHp) * 600);
+  const diffBonus = Math.floor(diffMult[Math.min(battleNumber-1, diffMult.length-1)] * 300);
+  const bossBonus = isBoss() ? 500 : 0;
+  return 500 + hpBonus + diffBonus + bossBonus;
+}
+
+// ═══════════════════════════════════════
+//  TEXT SKIP
+// ═══════════════════════════════════════
+function onTextboxClick() { textSkip = true; }
+
+// ═══════════════════════════════════════
+//  KEYBOARD
+// ═══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (k === 'z' || k === ' ' || k === 'enter') { textSkip = true; e.preventDefault(); }
+  if ((k === 'x' || k === 'escape') && currentPanel !== 'main' && playerTurn) { showMainMenu(); e.preventDefault(); }
+  if (['1','2','3','4'].includes(k) && playerTurn && currentPanel === 'moves') {
+    const btn = document.querySelectorAll('.move-btn')[parseInt(k)-1];
+    if (btn && !btn.disabled) btn.click();
+  }
+  if (k === 'f' && playerTurn && currentPanel === 'main') document.getElementById('btn-fight').click();
+  if (k === 'b' && playerTurn && currentPanel === 'main') document.getElementById('btn-bag').click();
+  if (k === 'r' && playerTurn && currentPanel === 'main') document.getElementById('btn-run').click();
+  if (k === 's') toggleSpeed();
+});
+
+// ═══════════════════════════════════════
+//  WEATHER
+// ═══════════════════════════════════════
+const WEATHERS   = ['none','sun','rain','sandstorm','hail'];
+const W_NAMES    = { none:null, sun:'☀️ LUZ DO SOL', rain:'🌧️ CHUVA', sandstorm:'🌪️ TEMPESTADE AREIA', hail:'❄️ GRANIZO' };
+const W_COLORS   = { sun:'#f5c518', rain:'#6890f0', sandstorm:'#d4a050', hail:'#98d8d8' };
+const W_IMMUNE   = { sandstorm:['rock','ground','steel'], hail:['ice'] };
+
+function setWeather(type) {
+  currentWeather = type;
+  const overlay = document.getElementById('weather-overlay');
+  const arena   = document.getElementById('arena');
+  const badge   = document.getElementById('weather-badge');
+  overlay.innerHTML = '';
+  WEATHERS.forEach(w => arena.classList.remove(`weather-${w}`));
+  if (type === 'none') { badge.classList.remove('show'); return; }
+  arena.classList.add(`weather-${type}`);
+  badge.textContent = W_NAMES[type];
+  badge.style.color        = W_COLORS[type] || 'white';
+  badge.style.borderColor  = W_COLORS[type] || 'rgba(255,255,255,0.2)';
+  badge.classList.add('show');
+
+  if (type === 'rain') {
+    for (let i = 0; i < 22; i++) {
+      const d = document.createElement('div');
+      d.className = 'rain-drop';
+      d.style.cssText = `left:${Math.random()*105}%;height:${rng(9,18)}px;animation-duration:${(Math.random()*0.4+0.55).toFixed(2)}s;animation-delay:${(Math.random()*0.9).toFixed(2)}s;opacity:${(Math.random()*0.45+0.3).toFixed(2)}`;
+      overlay.appendChild(d);
+    }
+  } else if (type === 'sun') {
+    const sun = document.createElement('div');
+    sun.style.cssText = 'position:absolute;top:6px;right:14px;width:24px;height:24px;border-radius:50%;background:rgba(255,220,60,0.55);box-shadow:0 0 14px rgba(255,220,60,0.65);animation:ray-pulse 2s ease-in-out infinite';
+    overlay.appendChild(sun);
+    for (let i = 0; i < 8; i++) {
+      const r = document.createElement('div');
+      r.className = 'sun-ray';
+      r.style.cssText = `transform:rotate(${i*45}deg);animation-delay:${(i*0.28).toFixed(2)}s;height:${rng(45,75)}px`;
+      overlay.appendChild(r);
+    }
+  } else if (type === 'sandstorm') {
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'sand-particle';
+      const sz = rng(2,5);
+      p.style.cssText = `top:${Math.random()*85}%;width:${sz}px;height:${sz}px;animation-duration:${(Math.random()*1.4+0.7).toFixed(2)}s;animation-delay:${(Math.random()*1.6).toFixed(2)}s;--sdrift:${rng(-30,50)}px`;
+      overlay.appendChild(p);
+    }
+  } else if (type === 'hail') {
+    for (let i = 0; i < 18; i++) {
+      const h = document.createElement('div');
+      h.className = 'hail-particle';
+      const sz = rng(3,5);
+      h.style.cssText = `left:${Math.random()*105}%;width:${sz}px;height:${sz}px;animation-duration:${(Math.random()*0.55+0.55).toFixed(2)}s;animation-delay:${(Math.random()*0.9).toFixed(2)}s;--hdrift:${rng(-12,12)}px`;
+      overlay.appendChild(h);
+    }
+    const fog = document.createElement('div');
+    fog.className = 'fog-layer';
+    overlay.appendChild(fog);
+  }
+}
+
+function weatherDmgMod(mType) {
+  if (currentWeather === 'sun') { if (mType === 'fire') return 1.5; if (mType === 'water') return 0.5; }
+  if (currentWeather === 'rain') { if (mType === 'water') return 1.5; if (mType === 'fire') return 0.5; }
+  return 1;
+}
+
+async function applyWeatherDamage(poke, idx) {
+  if (currentWeather === 'none') return false;
+  const immune = W_IMMUNE[currentWeather];
+  if (!immune || poke.types.some(t => immune.includes(t))) return false;
+  const dmg = Math.max(1, Math.floor(poke.maxHp / 16));
+  poke.hp -= dmg; updateHP(poke, idx);
+  spawnDmgPopup(`sprite${idx}`, dmg, 'not-very');
+  const msgs = { sandstorm: `${poke.name} açoitado pela areia!`, hail: `${poke.name} ferido pelo granizo!` };
+  await log(msgs[currentWeather] || '', 900);
+  if (poke.hp <= 0) return true;
+  return false;
+}
+
+// ═══════════════════════════════════════
+//  BAG
+// ═══════════════════════════════════════
 const bagItems = [
-  { id: 'potion',    name: 'Poção',       icon: '🧪', count: 3, heal: 20,  desc: 'Cura 20 HP',     type: 'heal' },
-  { id: 'superpotion',name: 'Super Poção',icon: '💊', count: 2, heal: 50,  desc: 'Cura 50 HP',     type: 'heal' },
-  { id: 'fullheal',  name: 'Cura Total',  icon: '✨', count: 1, heal: 0,   desc: 'Cura status',    type: 'status' },
-  { id: 'antidote',  name: 'Antídoto',    icon: '🌿', count: 2, heal: 0,   desc: 'Cura veneno',    type: 'antidote' },
+  { id:'potion',     name:'Poção',       icon:'🧪', count:3, heal:20,  desc:'Cura 20 HP',       type:'heal'    },
+  { id:'superpotion',name:'Super Poção', icon:'💊', count:2, heal:50,  desc:'Cura 50 HP',       type:'heal'    },
+  { id:'hyper',      name:'Hiper Poção', icon:'💉', count:1, heal:120, desc:'Cura 120 HP',      type:'heal'    },
+  { id:'fullheal',   name:'Cura Total',  icon:'✨', count:1, heal:0,   desc:'Remove status',    type:'status'  },
+  { id:'antidote',   name:'Antídoto',    icon:'🌿', count:2, heal:0,   desc:'Cura veneno',      type:'antidote'},
+  { id:'xattack',    name:'X Ataque',    icon:'⬆️', count:2, heal:0,   desc:'+50% ATK',         type:'xattack' },
 ];
 
 function renderBag() {
@@ -741,78 +945,64 @@ async function useItem(idx) {
   if (!playerTurn || tournamentOver) return;
   const item = bagItems[idx];
   if (item.count <= 0) return;
-
   item.count--;
   playerTurn = false;
   toggleMainActions(false);
   showMainMenu();
-
-  // Show item use bubble
   const bubble = document.createElement('div');
   bubble.className = 'item-use-bubble';
   bubble.textContent = `${item.icon} ${item.name}!`;
   document.getElementById('arena').appendChild(bubble);
-  await sleep(800);
+  await sleep(720);
   bubble.remove();
-
   const s1 = document.getElementById('sprite1');
-
   if (item.type === 'heal') {
     const before = p1.hp;
     p1.hp = Math.min(p1.maxHp, p1.hp + item.heal);
-    const actual = p1.hp - before;
+    const got = p1.hp - before;
     s1.classList.add('anim-heal');
-    await sleep(800);
-    s1.classList.remove('anim-heal');
+    await sleep(750); s1.classList.remove('anim-heal');
     updateHP(p1, 1);
-    spawnDmgPopup('sprite1', actual, 'heal');
-    await log(`${p1.name} recuperou ${actual} HP!`);
+    spawnDmgPopup('sprite1', got, 'heal');
+    await log(`${p1.name} recuperou ${got} HP!`);
   } else if (item.type === 'status') {
     if (p1.status && p1.status !== 'none') {
-      p1.status = null;
-      updateStatusBadge(p1, 1);
-      s1.classList.add('anim-heal');
-      await sleep(600);
-      s1.classList.remove('anim-heal');
-      await log(`Status de ${p1.name} foi curado!`);
-    } else {
-      await log(`${p1.name} não tem status!`);
-      item.count++; // refund
-    }
+      p1.status = null; updateStatusBadge(p1, 1);
+      s1.classList.add('anim-heal'); await sleep(600); s1.classList.remove('anim-heal');
+      await log(`Status de ${p1.name} curado!`);
+    } else { await log(`${p1.name} não tem status!`); item.count++; }
   } else if (item.type === 'antidote') {
     if (p1.status === 'poison' || p1.status === 'toxic') {
-      p1.status = null;
-      updateStatusBadge(p1, 1);
-      await log(`${p1.name} foi curado do veneno!`);
-    } else {
-      await log(`${p1.name} não está envenenado!`);
-      item.count++;
-    }
+      p1.status = null; updateStatusBadge(p1, 1);
+      await log(`${p1.name} curado do veneno!`);
+    } else { await log(`${p1.name} não está envenenado!`); item.count++; }
+  } else if (item.type === 'xattack') {
+    p1.atkBoost = (p1.atkBoost || 1) * 1.5;
+    s1.classList.add('anim-heal'); await sleep(600); s1.classList.remove('anim-heal');
+    await log(`Ataque de ${p1.name} subiu!`);
   }
-
-  // Enemy attacks after item use
+  // enemy's turn
   const eMove = enemyAI();
-  const secondSkip = await applyStatusDamage(p2, 2);
-  if (p2.hp > 0 && !secondSkip) {
+  const skip2 = await applyStatusDamage(p2, 2);
+  if (p2.hp > 0 && !skip2) {
     await executeMove(p2, p1, eMove, 2, 1);
     if (await endCheck()) return;
   }
-
+  if (await applyWeatherDamage(p1, 1)) { await endCheck(); return; }
+  if (await applyWeatherDamage(p2, 2)) { await endCheck(); return; }
   await log(`O que ${p1.name} deve fazer?`, 800);
-  playerTurn = true;
-  toggleMainActions(true);
+  playerTurn = true; toggleMainActions(true);
 }
 
-// ─────────────────────────────────────────
-//  PANEL SWITCHING
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
+//  PANELS
+// ═══════════════════════════════════════
 function showMainMenu() {
   currentPanel = 'main';
   document.getElementById('main-actions').style.display = 'grid';
   document.getElementById('moves-panel').classList.remove('visible');
   document.getElementById('bag-panel').classList.remove('visible');
 }
-
 function showMoves() {
   if (!playerTurn) return;
   currentPanel = 'moves';
@@ -820,7 +1010,6 @@ function showMoves() {
   document.getElementById('moves-panel').classList.add('visible');
   document.getElementById('bag-panel').classList.remove('visible');
 }
-
 function showBag() {
   if (!playerTurn) return;
   currentPanel = 'bag';
@@ -830,118 +1019,111 @@ function showBag() {
   document.getElementById('moves-panel').classList.remove('visible');
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  TYPE CHART
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 const typeChart = {
-  normal:   {rock:.5, ghost:0, steel:.5},
-  fire:     {fire:.5, water:.5, grass:2, ice:2, bug:2, rock:.5, dragon:.5, steel:2},
-  water:    {fire:2, water:.5, grass:.5, ground:2, rock:2, dragon:.5},
-  grass:    {fire:.5, water:2, grass:.5, poison:.5, ground:2, rock:2, bug:.5, dragon:.5, steel:.5, flying:.5},
-  electric: {water:2, electric:.5, grass:.5, ground:0, flying:2, dragon:.5},
-  ice:      {water:.5, grass:2, ground:2, flying:2, dragon:2, ice:.5, steel:.5},
-  fighting: {normal:2, rock:2, steel:2, ice:2, dark:2, ghost:0, poison:.5, bug:.5, psychic:.5, flying:.5},
-  ground:   {fire:2, electric:2, grass:.5, poison:2, flying:0, rock:2, steel:2, bug:.5},
-  flying:   {grass:2, fighting:2, bug:2, rock:.5, steel:.5, electric:.5},
-  psychic:  {fighting:2, poison:2, steel:.5, dark:0, psychic:.5},
-  bug:      {grass:2, psychic:2, dark:2, fire:.5, fighting:.5, poison:.5, flying:.5, ghost:.5, steel:.5},
-  rock:     {fire:2, ice:2, flying:2, bug:2, fighting:.5, ground:.5, steel:.5},
-  ghost:    {psychic:2, ghost:2, normal:0, dark:.5},
-  dragon:   {dragon:2, steel:.5},
-  dark:     {psychic:2, ghost:2, fighting:.5, dark:.5},
-  steel:    {rock:2, ice:2, fairy:2, fire:.5, water:.5, electric:.5, steel:.5},
-  poison:   {grass:2, fairy:2, poison:.5, ground:.5, rock:.5, ghost:.5},
-  fairy:    {fighting:2, dragon:2, dark:2, fire:.5, poison:.5, steel:.5}
+  normal:   {rock:.5,ghost:0,steel:.5},
+  fire:     {fire:.5,water:.5,grass:2,ice:2,bug:2,rock:.5,dragon:.5,steel:2},
+  water:    {fire:2,water:.5,grass:.5,ground:2,rock:2,dragon:.5},
+  grass:    {fire:.5,water:2,grass:.5,poison:.5,ground:2,rock:2,bug:.5,dragon:.5,steel:.5,flying:.5},
+  electric: {water:2,electric:.5,grass:.5,ground:0,flying:2,dragon:.5},
+  ice:      {water:.5,grass:2,ground:2,flying:2,dragon:2,ice:.5,steel:.5},
+  fighting: {normal:2,rock:2,steel:2,ice:2,dark:2,ghost:0,poison:.5,bug:.5,psychic:.5,flying:.5},
+  ground:   {fire:2,electric:2,grass:.5,poison:2,flying:0,rock:2,steel:2,bug:.5},
+  flying:   {grass:2,fighting:2,bug:2,rock:.5,steel:.5,electric:.5},
+  psychic:  {fighting:2,poison:2,steel:.5,dark:0,psychic:.5},
+  bug:      {grass:2,psychic:2,dark:2,fire:.5,fighting:.5,poison:.5,flying:.5,ghost:.5,steel:.5},
+  rock:     {fire:2,ice:2,flying:2,bug:2,fighting:.5,ground:.5,steel:.5},
+  ghost:    {psychic:2,ghost:2,normal:0,dark:.5},
+  dragon:   {dragon:2,steel:.5},
+  dark:     {psychic:2,ghost:2,fighting:.5,dark:.5},
+  steel:    {rock:2,ice:2,fairy:2,fire:.5,water:.5,electric:.5,steel:.5},
+  poison:   {grass:2,fairy:2,poison:.5,ground:.5,rock:.5,ghost:.5},
+  fairy:    {fighting:2,dragon:2,dark:2,fire:.5,poison:.5,steel:.5}
 };
-function typeEffect(atkType, defType) { return typeChart[atkType]?.[defType] ?? 1; }
+function typeEff(atk, def) { return typeChart[atk]?.[def] ?? 1; }
 
 const typeColors = {
-  normal:'#a0a0a0', fire:'#f08030', water:'#6890f0', grass:'#78c850',
-  electric:'#f8d030', ice:'#98d8d8', fighting:'#c03028', ground:'#e0c068',
-  flying:'#a890f0', psychic:'#f85888', bug:'#a8b820', rock:'#b8a038',
-  ghost:'#705898', dragon:'#7038f8', dark:'#705848', steel:'#b8b8d0',
-  poison:'#a040a0', fairy:'#ee99ac'
+  normal:'#a0a0a0',fire:'#f08030',water:'#6890f0',grass:'#78c850',
+  electric:'#f8d030',ice:'#98d8d8',fighting:'#c03028',ground:'#e0c068',
+  flying:'#a890f0',psychic:'#f85888',bug:'#a8b820',rock:'#b8a038',
+  ghost:'#705898',dragon:'#7038f8',dark:'#705848',steel:'#b8b8d0',
+  poison:'#a040a0',fairy:'#ee99ac'
 };
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  TEXTBOX
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 async function log(text, delay = 1600) {
-  const box = document.getElementById('textbox');
-  box.innerHTML = text + '<span id="cursor"></span>';
-  await sleep(delay);
+  if (!text) { await sleep(delay); return; }
+  document.getElementById('textbox').innerHTML = text + '<span id="cursor"></span>';
+  textSkip = false;
+  const t0 = Date.now(), d = Math.round(delay / speedMult);
+  while (Date.now() - t0 < d) {
+    if (textSkip) break;
+    await new Promise(r => setTimeout(r, 40));
+  }
+  textSkip = false;
 }
 
 async function typeText(text, delay = 1600) {
   const box = document.getElementById('textbox');
   box.innerHTML = '<span id="cursor"></span>';
-  const chars = text.split('');
+  textSkip = false;
   let current = '';
-  for (const ch of chars) {
+  for (const ch of text.split('')) {
+    if (textSkip) { current = text; box.innerHTML = current + '<span id="cursor"></span>'; break; }
     current += ch;
     box.innerHTML = current + '<span id="cursor"></span>';
-    await sleep(30);
+    await new Promise(r => setTimeout(r, Math.round(28 / speedMult)));
   }
-  await sleep(delay);
+  await log('', delay);
 }
 
-// ─────────────────────────────────────────
-//  FETCH POKEMON
-// ─────────────────────────────────────────
-async function getPokemon(id) {
-  const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-  const d = await r.json();
+// ═══════════════════════════════════════
+//  FETCH POKEMON (Gen I–III, IDs 1–386)
+// ═══════════════════════════════════════
+async function getPokemon(id, statMult = 1.0, level = 50) {
+  const d = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.json());
   const stats = {};
   d.stats.forEach(s => stats[s.stat.name] = s.base_stat);
-
-  let allMoves = [...d.moves];
-  shuffle(allMoves);
-  const picked = [];
+  const allMoves = shuffle([...d.moves]);
   const moveData = [];
-
   for (const m of allMoves) {
-    if (picked.length >= 4) break;
+    if (moveData.length >= 4) break;
     try {
       const md = await fetch(m.move.url).then(r => r.json());
       if (!md.power && md.damage_class?.name === 'status' && moveData.filter(x => !x.damage).length >= 1) continue;
       moveData.push({
-        name: capitalize(md.name),
-        power: md.power || 0,
-        accuracy: md.accuracy ?? 100,
-        type: md.type.name,
-        pp: md.pp || 10,
-        maxPP: md.pp || 10,
-        damage: md.power != null && md.power > 0,
+        name: cap(md.name), power: md.power || 0,
+        accuracy: md.accuracy ?? 100, type: md.type.name,
+        pp: md.pp || 10, maxPP: md.pp || 10,
+        damage: !!(md.power && md.power > 0),
         damageClass: md.damage_class?.name || 'physical',
         effect: md.meta?.ailment?.name || null,
         effectChance: md.meta?.ailment_chance || 100,
-        heal: md.meta?.healing || 0,
-        priority: md.priority || 0
+        heal: md.meta?.healing || 0, priority: md.priority || 0
       });
-      picked.push(m);
-    } catch(e) { continue; }
+    } catch { continue; }
   }
-
-  while (moveData.length < 4) {
-    moveData.push({ name: 'Tackle', power: 40, accuracy: 100, type: 'normal',
-      pp: 35, maxPP: 35, damage: true, damageClass: 'physical',
-      effect: null, effectChance: 0, heal: 0, priority: 0 });
-  }
-
-  const hp = stats['hp'] * 2 + 10;
+  while (moveData.length < 4) moveData.push({
+    name:'Tackle', power:40, accuracy:100, type:'normal', pp:35, maxPP:35,
+    damage:true, damageClass:'physical', effect:null, effectChance:0, heal:0, priority:0
+  });
+  const hp = Math.floor((stats['hp'] * 2 + 10) * statMult);
   return {
-    name: capitalize(d.name),
+    name: cap(d.name), rawName: d.name,
     type: d.types[0].type.name,
     types: d.types.map(t => t.type.name),
     hp, maxHp: hp,
-    atk: stats['attack'],
-    def: stats['defense'],
-    spAtk: stats['special-attack'],
-    spDef: stats['special-defense'],
-    speed: stats['speed'],
-    moves: moveData,
-    status: null,
-    statusTurns: 0,
+    atk:   Math.floor(stats['attack']         * statMult),
+    def:   Math.floor(stats['defense']        * statMult),
+    spAtk: Math.floor(stats['special-attack'] * statMult),
+    spDef: Math.floor(stats['special-defense']* statMult),
+    speed: Math.floor(stats['speed']          * statMult),
+    level, moves: moveData, status: null, statusTurns: 0,
+    atkBoost: 1,
     spriteFront: `https://play.pokemonshowdown.com/sprites/ani/${d.name}.gif`,
     spriteBack:  `https://play.pokemonshowdown.com/sprites/ani-back/${d.name}.gif`,
     cry: `https://play.pokemonshowdown.com/audio/cries/${d.name}.mp3`,
@@ -949,338 +1131,358 @@ async function getPokemon(id) {
   };
 }
 
-// ─────────────────────────────────────────
-//  HP UPDATE
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
+//  HP
+// ═══════════════════════════════════════
 function updateHP(poke, idx) {
-  const pct = Math.max(0, (poke.hp / poke.maxHp) * 100);
+  const pct  = Math.max(0, (poke.hp / poke.maxHp) * 100);
   const bar  = document.getElementById(`hp${idx}`);
   const nums = document.getElementById(`hp${idx}-nums`);
-  bar.style.width = pct + '%';
+  bar.style.width      = pct + '%';
   bar.style.background = pct > 50 ? 'var(--green-hp)' : pct > 20 ? 'var(--yellow-hp)' : 'var(--red-hp)';
   nums.textContent = `${Math.max(0, poke.hp)} / ${poke.maxHp}`;
 }
-function updateBothHP() { updateHP(p1, 1); updateHP(p2, 2); }
+function updateBothHP() { updateHP(p1,1); updateHP(p2,2); }
 
-// ─────────────────────────────────────────
+function setTypeBadges(poke, idx) {
+  const c = document.getElementById(`p${idx}types`);
+  c.innerHTML = '';
+  poke.types.forEach(t => {
+    const s = document.createElement('span');
+    s.className = `poke-type-badge type-${t}`;
+    s.textContent = t.slice(0,4).toUpperCase();
+    c.appendChild(s);
+  });
+  document.getElementById(`p${idx}level`).textContent = `Lv${poke.level}`;
+}
+
+// ═══════════════════════════════════════
 //  STATUS
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 function updateStatusBadge(poke, idx) {
-  const badge = document.getElementById(`status${idx}`);
-  if (!poke.status || poke.status === 'none') { badge.style.display = 'none'; return; }
-  const labels  = { poison:'PSN', burn:'BRN', paralysis:'PAR', sleep:'SLP', freeze:'FRZ', toxic:'PSN' };
-  const classes = { poison:'status-psn', burn:'status-brn', paralysis:'status-par', sleep:'status-slp', freeze:'status-frz', toxic:'status-psn' };
-  badge.style.display = 'inline-block';
-  badge.textContent = labels[poke.status] || poke.status.toUpperCase().slice(0,3);
-  badge.className = `status-badge ${classes[poke.status] || 'status-psn'}`;
+  const b = document.getElementById(`status${idx}`);
+  if (!poke.status || poke.status === 'none') { b.style.display = 'none'; return; }
+  const labels  = {poison:'PSN',burn:'BRN',paralysis:'PAR',sleep:'SLP',freeze:'FRZ',toxic:'PSN'};
+  const classes = {poison:'status-psn',burn:'status-brn',paralysis:'status-par',sleep:'status-slp',freeze:'status-frz',toxic:'status-psn'};
+  b.style.display = 'inline-block';
+  b.textContent = labels[poke.status] || poke.status.toUpperCase().slice(0,3);
+  b.className = `status-badge ${classes[poke.status] || 'status-psn'}`;
 }
 
 async function applyStatusDamage(poke, idx) {
   if (!poke.status || poke.status === 'none') return false;
-
   if (poke.status === 'sleep') {
-    poke.statusTurns = (poke.statusTurns || 0) + 1;
-    if (poke.statusTurns >= rng(2, 5)) {
+    poke.statusTurns = (poke.statusTurns||0) + 1;
+    if (poke.statusTurns >= rng(2,5)) {
       poke.status = null; updateStatusBadge(poke, idx);
       await log(`${poke.name} acordou!`);
-    } else {
-      await log(`${poke.name} está dormindo...`);
-      return true;
-    }
+    } else { await log(`${poke.name} está dormindo...`); return true; }
   }
-
   if (poke.status === 'freeze') {
     if (Math.random() < 0.2) {
       poke.status = null; updateStatusBadge(poke, idx);
       await log(`${poke.name} descongelou!`);
-    } else {
-      await log(`${poke.name} está congelado!`);
-      return true;
-    }
+    } else { await log(`${poke.name} está congelado!`); return true; }
   }
-
   if (poke.status === 'paralysis' && Math.random() < 0.25) {
-    await log(`${poke.name} está paralisado e não consegue se mover!`);
-    return true;
+    await log(`${poke.name} paralisado e não consegue se mover!`); return true;
   }
-
   if (poke.status === 'poison' || poke.status === 'toxic') {
     const dmg = Math.floor(poke.maxHp / 8);
     poke.hp -= dmg; updateHP(poke, idx);
-    spawnDmgPopup(idx === 1 ? 'sprite1' : 'sprite2', dmg, '');
+    spawnDmgPopup(idx===1?'sprite1':'sprite2', dmg, '');
     await log(`${poke.name} sofreu dano de veneno!`);
     if (poke.hp <= 0) return false;
   }
-
   if (poke.status === 'burn') {
     const dmg = Math.floor(poke.maxHp / 16);
     poke.hp -= dmg; updateHP(poke, idx);
-    spawnDmgPopup(idx === 1 ? 'sprite1' : 'sprite2', dmg, '');
+    spawnDmgPopup(idx===1?'sprite1':'sprite2', dmg, '');
     await log(`${poke.name} sofreu dano de queimadura!`);
   }
-
   return false;
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  DAMAGE POPUP
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 function spawnDmgPopup(spriteId, dmg, cls = '') {
   const el = document.getElementById(spriteId);
   if (!el) return;
-  const rect  = el.getBoundingClientRect();
-  const arena = document.getElementById('arena').getBoundingClientRect();
-  const pop   = document.createElement('div');
+  const er = el.getBoundingClientRect(), ar = document.getElementById('arena').getBoundingClientRect();
+  const pop = document.createElement('div');
   pop.className = `dmg-popup ${cls}`;
   pop.textContent = cls === 'heal' ? `+${dmg}` : `-${dmg}`;
-  pop.style.left = (rect.left - arena.left + rect.width/2 - 20) + 'px';
-  pop.style.top  = (rect.top - arena.top) + 'px';
+  pop.style.left = (er.left - ar.left + er.width/2 - 22) + 'px';
+  pop.style.top  = (er.top  - ar.top)  + 'px';
   document.getElementById('arena').appendChild(pop);
-  setTimeout(() => pop.remove(), 1200);
+  setTimeout(() => pop.remove(), 1300);
 }
 
-// ─────────────────────────────────────────
-//  EFFECT BANNER
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
+//  EFFECT BANNER + SCREEN FLASH
+// ═══════════════════════════════════════
 async function showEffectBanner(text, color) {
   const b = document.getElementById('effect-banner');
   b.textContent = text; b.style.color = color; b.style.borderColor = color;
   b.classList.add('show');
-  await sleep(900);
+  await sleep(850);
   b.classList.remove('show');
-  await sleep(200);
+  await sleep(120);
 }
 
-// ─────────────────────────────────────────
+async function flashScreen(color = 'white') {
+  const f = document.getElementById('screen-flash');
+  f.style.background = color;
+  f.classList.add('active');
+  await sleep(80);
+  f.classList.remove('active');
+}
+
+// ═══════════════════════════════════════
 //  CALC DAMAGE
-// ─────────────────────────────────────────
-function calcDamage(attacker, defender, move) {
-  const lvl = 50;
-  const atkStat = move.damageClass === 'special' ? attacker.spAtk : attacker.atk;
-  const defStat = move.damageClass === 'special' ? defender.spDef : defender.def;
-  let dmg = Math.floor((((2 * lvl / 5 + 2) * move.power * atkStat / defStat) / 50) + 2);
-  if (attacker.types.includes(move.type)) dmg = Math.floor(dmg * 1.5);
+// ═══════════════════════════════════════
+function calcDamage(atk, def, move) {
+  const lvl     = atk.level || 50;
+  const atkStat = move.damageClass === 'special' ? atk.spAtk : atk.atk;
+  const defStat = move.damageClass === 'special' ? def.spDef : def.def;
+  let dmg = Math.floor((((2*lvl/5+2) * move.power * atkStat/defStat) / 50) + 2);
+  if (atk.types.includes(move.type)) dmg = Math.floor(dmg * 1.5); // STAB
   let eff = 1;
-  for (const defType of (defender.types || [defender.type])) eff *= typeEffect(move.type, defType);
+  for (const dt of (def.types || [def.type])) eff *= typeEff(move.type, dt);
   dmg = Math.floor(dmg * eff);
-  if (attacker.status === 'burn' && move.damageClass === 'physical') dmg = Math.floor(dmg / 2);
-  dmg = Math.floor(dmg * rng(85, 100) / 100);
-  if (dmg < 1) dmg = 1;
-  return { dmg, eff };
+  if (atk.status === 'burn' && move.damageClass === 'physical') dmg = Math.floor(dmg * 0.5);
+  if (move.damageClass !== 'special') dmg = Math.floor(dmg * (atk.atkBoost || 1));
+  dmg = Math.floor(dmg * weatherDmgMod(move.type));
+  dmg = Math.floor(dmg * rng(85,100)/100);
+  const isCrit = Math.random() < 0.0625;
+  if (isCrit) dmg = Math.floor(dmg * 1.5);
+  return { dmg: Math.max(1, dmg), eff, isCrit };
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  EXECUTE MOVE
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 async function executeMove(attacker, defender, move, atkIdx, defIdx) {
   if (attacker.hp <= 0) return;
-  const atkSprite = document.getElementById(`sprite${atkIdx}`);
-  const defSprite = document.getElementById(`sprite${defIdx}`);
-
+  const aSprite = document.getElementById(`sprite${atkIdx}`);
+  const dSprite = document.getElementById(`sprite${defIdx}`);
   await log(`${attacker.name} usou ${move.name}!`);
   move.pp = Math.max(0, move.pp - 1);
   renderMoves();
-
-  if (Math.random() * 100 > (move.accuracy || 100)) {
-    await log(`O ataque de ${attacker.name} errou!`, 1200);
-    return;
-  }
-
-  try { new Audio(attacker.cry).play().catch(()=>{}); } catch(e) {}
-
-  atkSprite.classList.add(atkIdx === 1 ? 'anim-attack-p' : 'anim-attack-e');
-  await sleep(320);
-  atkSprite.classList.remove('anim-attack-p', 'anim-attack-e');
+  // accuracy
+  let acc = move.accuracy || 100;
+  if (currentWeather === 'rain' && move.name === 'Thunder') acc = 100;
+  if (Math.random() * 100 > acc) { await log(`Ataque de ${attacker.name} errou!`, 1200); return; }
+  try { new Audio(attacker.cry).play().catch(()=>{}); } catch {}
+  aSprite.classList.add(atkIdx === 1 ? 'anim-attack-p' : 'anim-attack-e');
+  await sleep(310);
+  aSprite.classList.remove('anim-attack-p','anim-attack-e');
 
   if (move.damage && move.power > 0) {
-    const { dmg, eff } = calcDamage(attacker, defender, move);
-    defSprite.classList.add('anim-hit');
-    await sleep(500);
-    defSprite.classList.remove('anim-hit');
-    defender.hp -= dmg;
-    updateHP(defender, defIdx);
-    const cls = eff > 1 ? 'super' : eff < 1 ? 'not-very' : '';
+    const { dmg, eff, isCrit } = calcDamage(attacker, defender, move);
+    dSprite.classList.add('anim-hit');
+    await sleep(480); dSprite.classList.remove('anim-hit');
+    defender.hp -= dmg; updateHP(defender, defIdx);
+    const cls = isCrit ? 'crit' : eff > 1 ? 'super' : eff < 1 ? 'not-very' : '';
     spawnDmgPopup(`sprite${defIdx}`, dmg, cls);
-    if (eff === 0)       await showEffectBanner('NÃO AFETA...', '#64748b');
-    else if (eff >= 2)   await showEffectBanner('SUPER EFETIVO!', '#f5c518');
-    else if (eff < 1)    await showEffectBanner('Pouco efetivo...', '#94a3b8');
-    if (Math.random() < 0.0625) await log(`Acerto crítico!`, 900);
-
+    if (eff === 0) {
+      await showEffectBanner('NÃO AFETA...', '#64748b');
+    } else if (eff >= 2) {
+      await flashScreen('rgba(255,220,0,0.35)');
+      document.getElementById('gameboy').classList.add('screen-shake');
+      setTimeout(() => document.getElementById('gameboy').classList.remove('screen-shake'), 460);
+      await showEffectBanner('SUPER EFETIVO!', '#f5c518');
+    } else if (eff < 1) {
+      await showEffectBanner('Pouco efetivo...', '#94a3b8');
+    }
+    if (isCrit) {
+      dSprite.classList.add('anim-crit');
+      setTimeout(() => dSprite.classList.remove('anim-crit'), 600);
+      await flashScreen('rgba(255,80,80,0.3)');
+      await log(`Acerto crítico!`, 900);
+    }
   } else if (move.effect && move.effect !== 'none') {
     if (!defender.status || defender.status === 'none') {
       if (Math.random() * 100 <= (move.effectChance || 100)) {
         defender.status = move.effect; defender.statusTurns = 0;
         updateStatusBadge(defender, defIdx);
-        defSprite.classList.add('anim-status');
-        await sleep(2000);
-        defSprite.classList.remove('anim-status');
+        dSprite.classList.add('anim-status');
+        await sleep(1800); dSprite.classList.remove('anim-status');
         const msgs = {
-          poison: `${defender.name} foi envenenado!`,
-          burn: `${defender.name} está em chamas!`,
-          paralysis: `${defender.name} está paralisado!`,
-          sleep: `${defender.name} adormeceu!`,
-          freeze: `${defender.name} foi congelado!`
+          poison:`${defender.name} foi envenenado!`,burn:`${defender.name} em chamas!`,
+          paralysis:`${defender.name} paralisado!`,sleep:`${defender.name} adormeceu!`,
+          freeze:`${defender.name} congelado!`
         };
-        await log(msgs[move.effect] || `${defender.name} sofreu ${move.effect}!`);
-      } else {
-        await log(`Mas não teve efeito...`, 1000);
-      }
-    } else {
-      await log(`Mas ${defender.name} já tem um status!`, 1000);
-    }
-  } else {
-    await log(`Mas não aconteceu nada...`, 1000);
-  }
+        await log(msgs[move.effect] || `${defender.name} sofreu efeito!`);
+      } else { await log(`Sem efeito desta vez...`, 1000); }
+    } else { await log(`${defender.name} já tem um status!`, 1000); }
+  } else { await log(`Mas não aconteceu nada...`, 1000); }
 
   if (move.heal > 0) {
-    const healAmt = Math.floor(attacker.maxHp * move.heal / 100);
-    attacker.hp = Math.min(attacker.maxHp, attacker.hp + healAmt);
+    const ha = Math.floor(attacker.maxHp * move.heal / 100);
+    attacker.hp = Math.min(attacker.maxHp, attacker.hp + ha);
     updateHP(attacker, atkIdx);
-    spawnDmgPopup(`sprite${atkIdx}`, healAmt, 'heal');
+    spawnDmgPopup(`sprite${atkIdx}`, ha, 'heal');
   }
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  ENEMY AI
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 function enemyAI() {
-  const available = p2.moves.filter(m => m.pp > 0);
-  if (!available.length) return { name: 'Struggle', power: 50, accuracy: 100, type: 'normal', damage: true, damageClass: 'physical', pp: 99, maxPP: 99, effect: null, effectChance: 0, heal: 0, priority: 0 };
-  let best = available[0], bestScore = -Infinity;
-  for (const m of available) {
+  const avail = p2.moves.filter(m => m.pp > 0);
+  if (!avail.length) return { name:'Struggle',power:50,accuracy:100,type:'normal',damage:true,damageClass:'physical',pp:99,maxPP:99,effect:null,effectChance:0,heal:0,priority:0 };
+  const p1HpPct = p1.hp / p1.maxHp;
+  let best = avail[0], bestScore = -Infinity;
+  for (const m of avail) {
     let score = 0;
     if (m.damage && m.power > 0) {
-      score = m.power * typeEffect(m.type, p1.type);
+      let eff = 1;
+      for (const t of p1.types) eff *= typeEff(m.type, t);
+      score = m.power * eff * weatherDmgMod(m.type);
       if (p2.types.includes(m.type)) score *= 1.5;
-    } else if (m.effect && m.effect !== 'none' && (!p1.status || p1.status === 'none')) {
-      score = 60;
+      const estKO = score * p2.atk / 80;
+      if (estKO >= p1.hp) score *= 2.2;
+    } else if (m.effect && m.effect !== 'none' && (!p1.status || p1.status === 'none') && p1HpPct > 0.25) {
+      score = m.effect === 'sleep' || m.effect === 'freeze' ? 110 : 70;
+    } else if (m.heal > 0 && p2.hp < p2.maxHp * 0.35) {
+      score = 95;
     }
-    score += Math.random() * 20 - 10;
+    score += Math.random() * 22 - 11;
     if (score > bestScore) { bestScore = score; best = m; }
   }
   return best;
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  TURN
-// ─────────────────────────────────────────
-async function playTurn(moveIndex) {
+// ═══════════════════════════════════════
+async function playTurn(moveIdx) {
   if (!playerTurn) return;
-  playerTurn = false;
-  toggleMainActions(false);
-  showMainMenu();
-
-  const pMove = p1.moves[moveIndex];
+  playerTurn = false; toggleMainActions(false); showMainMenu();
+  const pMove = p1.moves[moveIdx];
   if (!pMove || pMove.pp <= 0) {
     await log('Sem PP! Escolha outro golpe.', 1000);
-    playerTurn = true;
-    toggleMainActions(true);
-    return;
+    playerTurn = true; toggleMainActions(true); return;
   }
+  const eMove  = enemyAI();
+  const pFirst = pMove.priority > eMove.priority ||
+                 (pMove.priority === eMove.priority && p1.speed >= p2.speed);
+  const [first,fm,fi, second,sm,si] = pFirst
+    ? [p1,pMove,1, p2,eMove,2]
+    : [p2,eMove,2, p1,pMove,1];
 
-  const eMove = enemyAI();
-  const pFirst = (pMove.priority > eMove.priority) ||
-    (pMove.priority === eMove.priority && p1.speed >= p2.speed);
-
-  const [first, firstMove, firstIdx, second, secondMove, secondIdx] = pFirst
-    ? [p1, pMove, 1, p2, eMove, 2]
-    : [p2, eMove, 2, p1, pMove, 1];
-
-  const firstSkip = await applyStatusDamage(first, firstIdx);
+  const skip1 = await applyStatusDamage(first, fi);
   if (first.hp <= 0) { await endCheck(); return; }
-  if (!firstSkip) {
-    await executeMove(first, second, firstMove, firstIdx, secondIdx);
-    if (await endCheck()) return;
-  }
-
-  const secondSkip = await applyStatusDamage(second, secondIdx);
+  if (!skip1) { await executeMove(first, second, fm, fi, si); if (await endCheck()) return; }
+  const skip2 = await applyStatusDamage(second, si);
   if (second.hp <= 0) { await endCheck(); return; }
-  if (!secondSkip) {
-    await executeMove(second, first, secondMove, secondIdx, firstIdx);
-    if (await endCheck()) return;
-  }
+  if (!skip2) { await executeMove(second, first, sm, si, fi); if (await endCheck()) return; }
+
+  // weather end of turn
+  if (await applyWeatherDamage(p1,1)) { await endCheck(); return; }
+  if (await applyWeatherDamage(p2,2)) { await endCheck(); return; }
 
   await log(`O que ${p1.name} deve fazer?`, 800);
-  playerTurn = true;
-  toggleMainActions(true);
+  playerTurn = true; toggleMainActions(true);
 }
 
 async function endCheck() {
   if (p1.hp <= 0) {
     document.getElementById('sprite1').classList.add('anim-faint');
+    await flashScreen('rgba(255,0,0,0.3)');
     await log(`${p1.name} desmaiou!`);
-    await handleLoss();
-    return true;
+    await handleLoss(); return true;
   }
   if (p2.hp <= 0) {
     document.getElementById('sprite2').classList.add('anim-faint');
+    await flashScreen('rgba(255,255,255,0.25)');
     await log(`${p2.name} inimigo desmaiou!`);
-    await handleWin();
-    return true;
+    await handleWin(); return true;
   }
   return false;
 }
 
-// ─────────────────────────────────────────
-//  WIN / LOSE
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
+//  WIN / LOSS
+// ═══════════════════════════════════════
 async function handleWin() {
+  const score = calcBattleScore();
+  addScore(score);
+  battleScores.push({ won:true, score, enemy:p2.name });
+  hallOfFame.push(p2.name);
   saveTournament(true);
   battleNumber++;
   updateTournamentPips();
   if (battleNumber <= maxBattles) {
-    showResult('🌟 VITÓRIA! 🌟', `Batalha ${battleNumber-1} vencida!\nPróxima batalha preparando...`, 'PRÓXIMA BATALHA', 'next');
+    showResult('🌟 VITÓRIA! 🌟',
+      `Batalha ${battleNumber-1} vencida!\nPróxima: ${battleNumber===maxBattles?'BATALHA CHEFE!':'Batalha '+battleNumber}`,
+      'PRÓXIMA BATALHA', 'next', `+${score} PTS`);
   } else {
-    showResult('🏆 CAMPEÃO! 🏆', 'Você completou o\nTorneio Diário!\nVolte amanhã!', 'VER RESULTADO', 'done');
     tournamentOver = true;
+    showFinalScreen(true);
   }
 }
 
 async function handleLoss() {
+  battleScores.push({ won:false, score:0, enemy:p2.name });
   saveTournament(false);
   tournamentOver = true;
-  showResult('💀 DERROTA', `${p1.name} não conseguiu...\nTente novamente amanhã!`, 'VER RANKING', 'done');
+  showFinalScreen(false);
 }
 
-function showResult(title, sub, btnText, action) {
+function showResult(title, sub, btnText, action, scoreText='') {
   resultAction = action;
   document.getElementById('result-title').textContent = title;
-  document.getElementById('result-sub').textContent = sub;
-  document.getElementById('result-btn').textContent = btnText;
+  document.getElementById('result-sub').textContent   = sub;
+  document.getElementById('result-btn').textContent   = btnText;
+  document.getElementById('result-score').textContent = scoreText;
   document.getElementById('result-overlay').classList.add('show');
-  const isWin = action === 'next' || (action === 'done' && battleNumber > maxBattles);
-  document.getElementById('result-title').style.color = isWin ? '#f5c518' : '#ef4444';
+  document.getElementById('result-title').style.color = action === 'next' ? '#f5c518' : '#ef4444';
 }
-
 function hideResult() { document.getElementById('result-overlay').classList.remove('show'); }
-
 function handleResultBtn() {
-  if (resultAction === 'next') {
-    hideResult();
-    setTimeout(startBattle, 400);
-  }
+  if (resultAction === 'next') { hideResult(); setTimeout(startBattle, 350); }
 }
 
-// ─────────────────────────────────────────
+function showFinalScreen(won) {
+  const wins  = battleScores.filter(b => b.won).length;
+  const stars = wins >= 5 ? '⭐⭐⭐' : wins >= 3 ? '⭐⭐' : wins >= 1 ? '⭐' : '💀';
+  document.getElementById('final-title').textContent = won ? '🏆 CAMPEÃO!' : '💀 FIM DO TORNEIO';
+  document.getElementById('final-title').style.color = won ? '#f5c518' : '#ef4444';
+  document.getElementById('final-stars').textContent = stars;
+  document.getElementById('final-score-big').textContent = totalScore + ' PTS';
+  document.getElementById('final-stats').innerHTML = battleScores.map((b,i) => `
+    <div class="final-stat-row">
+      <span class="${b.won?'won-mark':'lost-mark'}">${b.won?'✅':'❌'} Batalha ${i+1}: ${b.enemy}</span>
+      <span>${b.score>0?'+'+b.score+' PTS':'--'}</span>
+    </div>`).join('');
+  if (hallOfFame.length > 0) {
+    document.getElementById('final-hall').innerHTML = '🏅 DERROTADOS:<br>' + hallOfFame.join(' · ');
+  }
+  document.getElementById('final-overlay').classList.add('show');
+}
+
+// ═══════════════════════════════════════
 //  RUN
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 async function tryRun() {
   if (!playerTurn || tournamentOver) return;
-  playerTurn = false;
-  toggleMainActions(false);
-  if (Math.random() < 0.5) {
+  playerTurn = false; toggleMainActions(false);
+  const chance = 0.25 + (p1.speed / (p1.speed + p2.speed)) * 0.55;
+  if (Math.random() > chance) {
     await log(`${p1.name} não conseguiu fugir!`, 1200);
-    playerTurn = true;
-    toggleMainActions(true);
+    playerTurn = true; toggleMainActions(true);
   } else {
     await log(`Você fugiu da batalha!`, 1200);
     await handleLoss();
   }
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  MOVES RENDER
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 function renderMoves() {
   const div = document.getElementById('moves');
   if (!p1) return;
@@ -1289,144 +1491,165 @@ function renderMoves() {
     const btn = document.createElement('button');
     btn.className = 'move-btn';
     const color = typeColors[m.type] || '#a0a0a0';
-    const icon  = m.damage ? '⚔' : '✦';
+    const cat   = m.damageClass === 'special' ? '🌀' : m.damageClass === 'physical' ? '⚔' : '✦';
+    const ppClass = m.pp <= 2 ? 'move-pp low' : 'move-pp';
     btn.innerHTML = `
-      <span class="move-name">${icon} ${m.name}</span>
-      <div class="move-meta">
-        <div class="move-type-dot" style="background:${color}"></div>
-        <span class="move-pp">PP ${m.pp}/${m.maxPP}</span>
-        ${m.power ? `<span class="move-power-label">· POW ${m.power}</span>` : ''}
+      <div class="move-type-bar" style="background:${color}"></div>
+      <div class="move-btn-inner">
+        <span class="move-name">${m.name}</span>
+        <div class="move-meta">
+          <div class="move-type-dot" style="background:${color}"></div>
+          <span class="move-cat">${cat}</span>
+          <span class="${ppClass}">${m.pp}/${m.maxPP}</span>
+          ${m.power ? `<span class="move-pow">POW ${m.power}</span>` : ''}
+          <span class="move-key">[${i+1}]</span>
+        </div>
       </div>`;
     btn.disabled = !playerTurn;
-    btn.onclick = () => playTurn(i);
+    btn.onclick  = () => playTurn(i);
     div.appendChild(btn);
   });
 }
 
-function toggleMainActions(enabled) {
+function toggleMainActions(on) {
   ['btn-fight','btn-bag','btn-run'].forEach(id => {
-    document.getElementById(id).disabled = !enabled;
+    document.getElementById(id).disabled = !on;
   });
-  // also toggle move buttons in case visible
-  document.querySelectorAll('.move-btn').forEach(b => b.disabled = !enabled);
+  document.querySelectorAll('.move-btn').forEach(b => b.disabled = !on);
 }
 
-// ─────────────────────────────────────────
-//  TOURNAMENT PERSISTENCE
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
+//  PERSISTENCE
+// ═══════════════════════════════════════
 function getTournamentData() {
-  try { return JSON.parse(localStorage.getItem('pkmnTournament') || '{}'); } catch(e) { return {}; }
+  try { return JSON.parse(localStorage.getItem('pkmnTournamentV3')||'{}'); } catch { return {}; }
 }
-
 function saveTournament(win) {
   const today = new Date().toDateString();
   const data  = getTournamentData();
-  if (!data[today]) data[today] = { wins: 0, battles: 0 };
+  if (!data[today]) data[today] = { wins:0, battles:0, bestScore:0 };
   data[today].battles++;
   if (win) data[today].wins++;
-  localStorage.setItem('pkmnTournament', JSON.stringify(data));
+  if (totalScore > (data[today].bestScore||0)) data[today].bestScore = totalScore;
+  localStorage.setItem('pkmnTournamentV3', JSON.stringify(data));
   updateTournamentPips();
 }
-
 function updateTournamentPips() {
-  const today = new Date().toDateString();
-  const data  = getTournamentData();
-  const d     = data[today] || { wins: 0, battles: 0 };
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= maxBattles; i++) {
     const pip = document.getElementById(`pip${i}`);
-    pip.className = 'battle-pip';
+    if (!pip) continue;
+    pip.classList.remove('won','lost','current');
     if (i < battleNumber) {
-      if (i <= d.wins) pip.classList.add('won');
-      else pip.classList.add('lost');
+      const b = battleScores[i-1];
+      pip.classList.add(b?.won ? 'won' : 'lost');
     } else if (i === battleNumber && !tournamentOver) {
       pip.classList.add('current');
     }
   }
+  document.getElementById('boss-label').textContent =
+    battleNumber === maxBattles && !tournamentOver ? '← CHEFE!' : '';
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  UTILS
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = rng(0, i);
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = rng(0, i); [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  START BATTLE
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 async function startBattle() {
-  playerTurn = false;
-  showMainMenu();
+  playerTurn = false; showMainMenu();
 
-  const overlay = document.getElementById('loading-overlay');
-  overlay.style.opacity = '1';
-  overlay.style.display = 'flex';
+  const loadOv = document.getElementById('loading-overlay');
+  loadOv.style.opacity = '1'; loadOv.style.display = 'flex';
 
   ['sprite1','sprite2'].forEach(id => {
     const el = document.getElementById(id);
-    el.className = 'sprite';
-    el.style.opacity = '1';
-    el.style.transform = '';
+    el.className = 'sprite'; el.style.opacity = '1'; el.style.transform = '';
   });
-
   document.getElementById('textbox').innerHTML = 'Procurando oponente...<span id="cursor"></span>';
   document.getElementById('moves').innerHTML = '';
   toggleMainActions(false);
 
-  const id1 = rng(1, 151);
-  let id2   = rng(1, 151);
-  while (id2 === id1) id2 = rng(1, 151);
+  // Weather – 40% clear, 60% some weather
+  const rawW = Math.random() < 0.40 ? 'none' : WEATHERS[rng(1, WEATHERS.length-1)];
+  setWeather(rawW);
 
-  document.getElementById('loading-text').textContent = 'CARREGANDO POKÉMON...';
-  [p1, p2] = await Promise.all([getPokemon(id1), getPokemon(id2)]);
-  p1.spriteId = 'sprite1';
-  p2.spriteId = 'sprite2';
+  // Difficulty
+  const bIdx  = Math.min(battleNumber-1, diffMult.length-1);
+  const eMult = diffMult[bIdx];
+  const eLvl  = enemyLvls[bIdx];
 
-  overlay.style.opacity = '0';
-  setTimeout(() => { overlay.style.display = 'none'; }, 500);
+  // Pokémon IDs: Gen I–III (1–386)
+  const id1 = rng(1, 386);
+  let id2   = rng(1, 386);
+  while (id2 === id1) id2 = rng(1, 386);
+
+  document.getElementById('loading-text').textContent = isBoss()
+    ? '⚠️ CARREGANDO CHEFE...' : 'CARREGANDO POKÉMON...';
+
+  [p1, p2] = await Promise.all([
+    getPokemon(id1, 1.0, PLAYER_LVL),
+    getPokemon(id2, eMult, eLvl)
+  ]);
+  p1.spriteId = 'sprite1'; p2.spriteId = 'sprite2';
+
+  loadOv.style.opacity = '0';
+  setTimeout(() => { loadOv.style.display = 'none'; }, 500);
 
   document.getElementById('p1name').textContent = p1.name;
   document.getElementById('p2name').textContent = p2.name;
-
-  const p1TypeEl = document.getElementById('p1type');
-  const p2TypeEl = document.getElementById('p2type');
-  p1TypeEl.textContent = p1.type.toUpperCase();
-  p1TypeEl.className = `poke-type-badge type-${p1.type}`;
-  p2TypeEl.textContent = p2.type.toUpperCase();
-  p2TypeEl.className = `poke-type-badge type-${p2.type}`;
+  setTypeBadges(p1, 1);
+  setTypeBadges(p2, 2);
 
   const s1 = document.getElementById('sprite1');
   const s2 = document.getElementById('sprite2');
   s1.src = p1.spriteBack;
   s2.src = p2.spriteFront;
-  s1.classList.add('anim-enter-player');
-  s2.classList.add('anim-enter-enemy');
-  setTimeout(() => { s1.classList.remove('anim-enter-player'); s1.classList.add('anim-float'); }, 600);
-  setTimeout(() => { s2.classList.remove('anim-enter-enemy'); }, 600);
 
-  updateStatusBadge(p1, 1);
-  updateStatusBadge(p2, 2);
+  if (isBoss()) {
+    s2.classList.add('anim-boss-enter');
+    setTimeout(() => s2.classList.remove('anim-boss-enter'), 600);
+  } else {
+    s2.classList.add('anim-enter-enemy');
+    setTimeout(() => s2.classList.remove('anim-enter-enemy'), 600);
+  }
+  s1.classList.add('anim-enter-player');
+  setTimeout(() => { s1.classList.remove('anim-enter-player'); s1.classList.add('anim-float'); }, 600);
+
+  updateStatusBadge(p1,1); updateStatusBadge(p2,2);
   updateBothHP();
   renderMoves();
   updateTournamentPips();
 
-  try { new Audio(p2.cry).play().catch(()=>{}); } catch(e) {}
-  await typeText(`Um ${p2.name} selvagem apareceu!`);
-  try { new Audio(p1.cry).play().catch(()=>{}); } catch(e) {}
-  await log(`Vai, ${p1.name}!`);
-  await log(`O que ${p1.name} deve fazer?`, 800);
+  try { new Audio(p2.cry).play().catch(()=>{}); } catch {}
 
-  playerTurn = true;
-  toggleMainActions(true);
+  if (isBoss()) {
+    await flashScreen('rgba(168,85,247,0.4)');
+    await typeText(`⚠️ CHEFE! Um ${p2.name} poderoso apareceu!`);
+  } else {
+    await typeText(`Um ${p2.name} selvagem apareceu!`);
+  }
+
+  if (currentWeather !== 'none') {
+    await log(`${W_NAMES[currentWeather]} começou!`, 1100);
+  }
+  try { new Audio(p1.cry).play().catch(()=>{}); } catch {}
+  await log(`Vai, ${p1.name}!`);
+  await log(`O que ${p1.name} deve fazer?`, 700);
+
+  playerTurn = true; toggleMainActions(true);
 }
 
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 //  INIT
-// ─────────────────────────────────────────
+// ═══════════════════════════════════════
 updateTournamentPips();
 startBattle();
 </script>
